@@ -19,6 +19,8 @@
     --glass-bg: rgba(15, 23, 42, 0.6);
     --glass-border: rgba(148, 163, 184, 0.18);
     --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.35);
+    --accent-primary: #818cf8;
+    --accent-secondary: #c084fc;
     /* 让使用 var(--bg-gradient) 的页面在 dark 下自动切换 */
     --bg-gradient: var(--bg-gradient-dark);
   }
@@ -69,6 +71,16 @@
     border-color: rgba(99, 102, 241, 0.28);
   }
 
+  @supports (color: color-mix(in srgb, #000, #fff)) {
+    .glass-card:hover {
+      border-color: color-mix(in srgb, var(--accent-primary) 22%, transparent);
+    }
+
+    html.dark .glass-card:hover {
+      border-color: color-mix(in srgb, var(--accent-primary) 28%, transparent);
+    }
+  }
+
   .btn-primary {
     @apply px-4 py-2 rounded-xl font-semibold text-white transition-all duration-300;
     background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
@@ -78,6 +90,12 @@
   .btn-primary:hover {
     @apply scale-[1.02] shadow-lg;
     filter: brightness(1.1);
+  }
+
+  @supports (color: color-mix(in srgb, #000, #fff)) {
+    .btn-primary {
+      box-shadow: 0 4px 15px color-mix(in srgb, var(--accent-primary) 30%, transparent);
+    }
   }
 }
 
@@ -120,6 +138,10 @@
 
 ::-webkit-scrollbar-thumb {
   @apply bg-slate-300 rounded-full hover:bg-slate-400 transition-colors;
+}
+
+html.dark ::-webkit-scrollbar-thumb {
+  @apply bg-slate-700 hover:bg-slate-600;
 }
 
 /* Utilities */

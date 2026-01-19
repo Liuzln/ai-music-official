@@ -9,6 +9,43 @@ export default defineNuxtConfig({
       meta: [
         { name: 'description', content: 'AI 生成音乐软件：文本生成音乐、风格控制、导出与二次编辑，让创作更高效。' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+        { name: 'color-scheme', content: 'light dark' },
+      ],
+      script: [
+        {
+          key: 'theme-init',
+          tagPosition: 'head',
+          children: `
+(() => {
+  try {
+    const cookieKey = 'theme-mode'
+    const match = document.cookie.match(new RegExp('(?:^|; )' + cookieKey + '=([^;]*)'))
+    const rawMode = match ? decodeURIComponent(match[1]) : 'system'
+    const mode = rawMode === 'light' || rawMode === 'dark' || rawMode === 'system' ? rawMode : 'system'
+    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+    const isDark = mode === 'dark' || (mode === 'system' && prefersDark)
+
+    const root = document.documentElement
+    root.classList.toggle('dark', isDark)
+    root.dataset.theme = isDark ? 'dark' : 'light'
+    root.dataset.themeMode = mode
+    root.style.colorScheme = isDark ? 'dark' : 'light'
+
+    root.style.setProperty('--accent-primary', isDark ? '${process.env.NUXT_PUBLIC_ACCENT_PRIMARY_DARK || '#818cf8'}' : '${process.env.NUXT_PUBLIC_ACCENT_PRIMARY || '#6366f1'}')
+    root.style.setProperty('--accent-secondary', isDark ? '${process.env.NUXT_PUBLIC_ACCENT_SECONDARY_DARK || '#c084fc'}' : '${process.env.NUXT_PUBLIC_ACCENT_SECONDARY || '#a855f7'}')
+
+    const themeColor = isDark ? '${process.env.NUXT_PUBLIC_THEME_COLOR_DARK || '#020617'}' : '${process.env.NUXT_PUBLIC_THEME_COLOR_LIGHT || '#f8fafc'}'
+    let meta = document.querySelector('meta[name="theme-color"]')
+    if (!meta) {
+      meta = document.createElement('meta')
+      meta.name = 'theme-color'
+      document.head.appendChild(meta)
+    }
+    meta.content = themeColor
+  } catch {}
+})()
+          `.trim(),
+        },
       ],
       link: [
         { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
@@ -34,6 +71,14 @@ export default defineNuxtConfig({
       ogImage: process.env.NUXT_PUBLIC_OG_IMAGE || '/og-image.svg',
       appUrl: process.env.NUXT_PUBLIC_APP_URL || '#cta',
       contactEmail: process.env.NUXT_PUBLIC_CONTACT_EMAIL || '',
+      theme: {
+        accentPrimary: process.env.NUXT_PUBLIC_ACCENT_PRIMARY || '#6366f1',
+        accentSecondary: process.env.NUXT_PUBLIC_ACCENT_SECONDARY || '#a855f7',
+        accentPrimaryDark: process.env.NUXT_PUBLIC_ACCENT_PRIMARY_DARK || '#818cf8',
+        accentSecondaryDark: process.env.NUXT_PUBLIC_ACCENT_SECONDARY_DARK || '#c084fc',
+        themeColorLight: process.env.NUXT_PUBLIC_THEME_COLOR_LIGHT || '#f8fafc',
+        themeColorDark: process.env.NUXT_PUBLIC_THEME_COLOR_DARK || '#020617',
+      },
     },
   },
   // Sitemap configuration
