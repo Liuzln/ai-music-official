@@ -328,8 +328,11 @@
 
             <div class="mt-5 grid gap-3 sm:grid-cols-2">
               <div
-                v-for="point in activeTemplate.points"
+                v-for="(point, pointIdx) in activeTemplate.points"
                 :key="point"
+                v-motion
+                :initial="microPopInitial"
+                :visibleOnce="microPopVisibleOnce(staggerDelay(pointIdx, microStaggerBase, microStaggerStep))"
                 class="rounded-2xl bg-white/60 p-4 text-sm text-slate-700 dark:bg-slate-900/50 dark:text-slate-200"
               >
                 {{ point }}
@@ -337,7 +340,14 @@
             </div>
 
             <div class="mt-5 flex flex-wrap gap-2">
-              <span v-for="tag in activeTemplate.tags" :key="tag" class="badge">
+              <span
+                v-for="(tag, tagIdx) in activeTemplate.tags"
+                :key="tag"
+                v-motion
+                :initial="microPopInitial"
+                :visibleOnce="microPopVisibleOnce(staggerDelay(tagIdx, microStaggerBase, microStaggerStepTight))"
+                class="badge"
+              >
                 {{ tag }}
               </span>
             </div>
@@ -390,7 +400,14 @@
                 </div>
 
                 <ul class="mt-4 space-y-2 text-sm text-slate-600 dark:text-slate-300">
-                  <li v-for="bullet in m.bullets" :key="bullet" class="flex gap-2">
+                  <li
+                    v-for="(bullet, bulletIdx) in m.bullets"
+                    :key="bullet"
+                    v-motion
+                    :initial="microInitial"
+                    :visibleOnce="microVisibleOnce(staggerDelay(bulletIdx, microStaggerBase, microStaggerStep))"
+                    class="flex gap-2"
+                  >
                     <span class="mt-2 h-1.5 w-1.5 flex-none rounded-full bg-indigo-500/70"></span>
                     <span>{{ bullet }}</span>
                   </li>
@@ -418,8 +435,11 @@
 
               <div class="mt-5 space-y-3">
                 <div
-                  v-for="adv in modelAdvantages"
+                  v-for="(adv, advIdx) in modelAdvantages"
                   :key="adv.id"
+                  v-motion
+                  :initial="microInitial"
+                  :visibleOnce="microVisibleOnce(staggerDelay(advIdx, microStaggerBase, microStaggerStep))"
                   class="flex gap-3 rounded-2xl bg-white/60 p-4 dark:bg-slate-900/50"
                 >
                   <span class="inline-flex h-10 w-10 flex-none items-center justify-center rounded-2xl bg-slate-900 text-white dark:bg-slate-800">
@@ -488,6 +508,9 @@
                 <div
                   v-for="(m, mIdx) in c.metrics"
                   :key="`${c.id}-metric-${mIdx}`"
+                  v-motion
+                  :initial="microPopInitial"
+                  :visibleOnce="microPopVisibleOnce(staggerDelay(mIdx, microStaggerBase, microStaggerStep))"
                   class="rounded-2xl bg-white/60 p-3 dark:bg-slate-900/50"
                 >
                   <div class="text-slate-500 dark:text-slate-400">{{ m.label }}</div>
@@ -557,7 +580,14 @@
             </div>
 
             <div class="mt-5 flex flex-wrap gap-2">
-              <span v-for="badge in governmentBadges" :key="badge" class="badge">
+              <span
+                v-for="(badge, badgeIdx) in governmentBadges"
+                :key="badge"
+                v-motion
+                :initial="microPopInitial"
+                :visibleOnce="microPopVisibleOnce(staggerDelay(badgeIdx, microStaggerBase, microStaggerStep))"
+                class="badge"
+              >
                 {{ badge }}
               </span>
             </div>
@@ -580,8 +610,11 @@
 
             <div class="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3">
               <div
-                v-for="p in partners"
+                v-for="(p, partnerIdx) in partners"
                 :key="p.name"
+                v-motion
+                :initial="microPopInitial"
+                :visibleOnce="microPopVisibleOnce(staggerDelay(partnerIdx, microStaggerBase, microStaggerStep))"
                 class="flex items-center justify-center rounded-2xl bg-white/60 p-4 text-xs font-semibold text-slate-700 dark:bg-slate-900/50 dark:text-slate-200"
               >
                 {{ p.name }}
@@ -771,34 +804,36 @@ const onToggleThemeMode = () => {
 
 const easeOut = [0.22, 1, 0.36, 1] as const
 
-const headerInitial = { opacity: 0, y: -12, filter: 'blur(8px)' }
-const headerEnter = { opacity: 1, y: 0, filter: 'blur(0px)', transition: { duration: 0.6, ease: easeOut } }
+const headerInitial = { opacity: 0, y: -18, filter: 'blur(12px)' }
+const headerEnter = { opacity: 1, y: 0, filter: 'blur(0px)', transition: { duration: 0.75, ease: easeOut } }
 
-const fadeUpInitial = { opacity: 0, y: 18, filter: 'blur(10px)' }
+const fadeUpInitial = { opacity: 0, y: 34, scale: 0.98, filter: 'blur(18px)' }
 const fadeUpEnter = (delay = 0) => ({
   opacity: 1,
   y: 0,
+  scale: 1,
   filter: 'blur(0px)',
-  transition: { duration: 0.7, delay, ease: easeOut },
+  transition: { duration: 0.95, delay, ease: easeOut },
 })
 const fadeUpVisible = (delay = 0) => ({
   opacity: 1,
   y: 0,
+  scale: 1,
   filter: 'blur(0px)',
-  transition: { duration: 0.7, delay, ease: easeOut },
+  transition: { duration: 0.95, delay, ease: easeOut },
 })
 
-const liftSpring = { type: 'spring', stiffness: 260, damping: 24, mass: 0.8 } as const
+const liftSpring = { type: 'spring', stiffness: 230, damping: 20, mass: 0.9 } as const
 
-const cardInitial = { opacity: 0, y: 16, scale: 0.99, filter: 'blur(10px)' }
+const cardInitial = { opacity: 0, y: 36, scale: 0.96, filter: 'blur(18px)' }
 const cardEnter = (delay = 0) => ({
   opacity: 1,
   y: 0,
   scale: 1,
   filter: 'blur(0px)',
   transition: {
-    opacity: { duration: 0.65, delay, ease: easeOut },
-    filter: { duration: 0.65, delay, ease: easeOut },
+    opacity: { duration: 0.9, delay, ease: easeOut },
+    filter: { duration: 0.9, delay, ease: easeOut },
     y: { ...liftSpring, delay },
     scale: { ...liftSpring, delay },
   },
@@ -811,14 +846,46 @@ const cardVisibleOnce = (index = 0) => {
     scale: 1,
     filter: 'blur(0px)',
     transition: {
-      opacity: { duration: 0.65, delay, ease: easeOut },
-      filter: { duration: 0.65, delay, ease: easeOut },
+      opacity: { duration: 0.9, delay, ease: easeOut },
+      filter: { duration: 0.9, delay, ease: easeOut },
       y: { ...liftSpring, delay },
       scale: { ...liftSpring, delay },
     },
   }
 }
 const cardHovered = { y: -6, scale: 1.01, transition: { ...liftSpring } }
+
+const staggerDelay = (index: number, base = 0, step = 0.06) => base + index * step
+
+const microStaggerBase = 0.42
+const microStaggerStep = 0.06
+const microStaggerStepTight = 0.045
+
+const microInitial = { opacity: 0, y: 22, filter: 'blur(12px)' }
+const microVisibleOnce = (delay = 0) => ({
+  opacity: 1,
+  y: 0,
+  filter: 'blur(0px)',
+  transition: {
+    opacity: { duration: 0.75, delay, ease: easeOut },
+    filter: { duration: 0.75, delay, ease: easeOut },
+    y: { ...liftSpring, delay },
+  },
+})
+
+const microPopInitial = { opacity: 0, y: 24, scale: 0.92, filter: 'blur(12px)' }
+const microPopVisibleOnce = (delay = 0) => ({
+  opacity: 1,
+  y: 0,
+  scale: 1,
+  filter: 'blur(0px)',
+  transition: {
+    opacity: { duration: 0.75, delay, ease: easeOut },
+    filter: { duration: 0.75, delay, ease: easeOut },
+    y: { ...liftSpring, delay },
+    scale: { ...liftSpring, delay },
+  },
+})
 
 const previewCardEl = ref<HTMLElement | null>(null)
 const headerEl = ref<HTMLElement | null>(null)
