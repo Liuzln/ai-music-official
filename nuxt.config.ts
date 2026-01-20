@@ -69,7 +69,7 @@ export default defineNuxtConfig({
       siteUrl: process.env.NUXT_PUBLIC_SITE_URL || 'http://localhost:3000',
       siteName: process.env.NUXT_PUBLIC_SITE_NAME || 'AI Music',
       ogImage: process.env.NUXT_PUBLIC_OG_IMAGE || '/og-image.svg',
-      appUrl: process.env.NUXT_PUBLIC_APP_URL || '#cta',
+      appUrl: process.env.NUXT_PUBLIC_APP_URL || '/contact',
       contactEmail: process.env.NUXT_PUBLIC_CONTACT_EMAIL || '',
       contactWeChat: process.env.NUXT_PUBLIC_CONTACT_WECHAT || '',
       contactWeChatQr: process.env.NUXT_PUBLIC_CONTACT_WECHAT_QR || '',
@@ -89,6 +89,10 @@ export default defineNuxtConfig({
     gzip: true,
     routes: [
       { url: '/', changefreq: 'weekly', priority: 1.0 },
+      { url: '/templates', changefreq: 'weekly', priority: 0.8 },
+      { url: '/models', changefreq: 'weekly', priority: 0.8 },
+      { url: '/about', changefreq: 'monthly', priority: 0.6 },
+      { url: '/contact', changefreq: 'monthly', priority: 0.6 },
     ],
   },
 })

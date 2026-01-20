@@ -97,6 +97,35 @@
       box-shadow: 0 4px 15px color-mix(in srgb, var(--accent-primary) 30%, transparent);
     }
   }
+
+  .badge {
+    @apply inline-flex items-center rounded-full border border-slate-200 bg-white/70 px-3 py-1 text-xs text-slate-600 dark:border-slate-800 dark:bg-slate-900/60 dark:text-slate-300;
+  }
+
+  .tilt-wrapper {
+    perspective: 900px;
+  }
+
+  .preview-tilt {
+    --tilt-rx: 0deg;
+    --tilt-ry: 0deg;
+    transform: rotateX(var(--tilt-rx)) rotateY(var(--tilt-ry));
+    transform-style: preserve-3d;
+    transition:
+      transform 180ms cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 300ms cubic-bezier(0.22, 1, 0.36, 1),
+      border-color 300ms cubic-bezier(0.22, 1, 0.36, 1),
+      background 300ms cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: transform;
+  }
+
+  .preview-tilt.is-tilting {
+    transition:
+      transform 60ms linear,
+      box-shadow 300ms cubic-bezier(0.22, 1, 0.36, 1),
+      border-color 300ms cubic-bezier(0.22, 1, 0.36, 1),
+      background 300ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
 }
 
 @layer utilities {
@@ -156,5 +185,11 @@ html.dark ::-webkit-scrollbar-thumb {
 @media (prefers-reduced-motion: reduce) {
   .bg-blob {
     animation: none;
+  }
+
+  .preview-tilt,
+  .preview-tilt.is-tilting {
+    transform: none;
+    transition: none;
   }
 }
