@@ -38,7 +38,7 @@
           <a class="hover:text-slate-900 dark:hover:text-slate-100" href="#scenarios" @click="onMaybeSmoothAnchorClick">
             {{ t('nav.scenarios') }}
           </a>
-          <a class="hover:text-slate-900 dark:hover:text-slate-100" href="#faq" @click="onMaybeSmoothAnchorClick">
+          <a class="hover:text-slate-900 dark:hover:text-slate-100" href="#cta" @click="onMaybeSmoothAnchorClick">
             {{ t('nav.faq') }}
           </a>
         </nav>
@@ -241,197 +241,357 @@
         </div>
       </section>
 
-      <!-- 功能区：软件功能（卡片列表） -->
-      <section id="features" class="mx-auto max-w-6xl scroll-mt-24 px-4 py-12 md:py-16">
-        <!-- 功能区标题与说明 -->
+      <!-- 第二屏：场景模板（卡片 + 背景切换 + BGM） -->
+      <section
+        id="features"
+        class="templates-stage relative mx-auto max-w-6xl scroll-mt-24 overflow-hidden px-4 py-12 md:py-16"
+        :style="templateStageStyle"
+      >
+        <div class="templates-stage__bg pointer-events-none absolute inset-0 -z-10"></div>
+
         <div v-motion :initial="fadeUpInitial" :visibleOnce="fadeUpVisible(0)" class="max-w-2xl">
           <h2 class="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100 md:text-3xl">
-            {{ t('sections.features.title') }}
+            {{ t('sections.templates.title') }}
           </h2>
           <p class="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-300 md:text-base">
-            {{ t('sections.features.description') }}
+            {{ t('sections.templates.description') }}
           </p>
         </div>
 
-        <!-- 功能卡片：循环渲染 features -->
-        <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          <div
-            v-for="(f, idx) in features"
-            :key="f.id"
-            v-motion
-            :initial="cardInitial"
-            :visibleOnce="cardVisibleOnce(idx)"
-            :hovered="cardHovered"
-            class="glass-card group p-6"
-          >
-            <div class="flex items-start gap-3">
-              <span
-                class="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-indigo-600/10 transition-transform duration-300 group-hover:rotate-3 group-hover:scale-110 dark:bg-indigo-400/10"
-              >
-                <component :is="f.icon" class="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
-              </span>
-              <div class="min-w-0">
-                <h3 class="text-sm font-semibold text-slate-900 dark:text-slate-100">
-                  {{ f.title }}
-                </h3>
-                <p class="mt-1 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
-                  {{ f.description }}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- 流程区：3 步完成创作 -->
-      <section id="workflow" class="scroll-mt-24 border-y border-slate-200/70 bg-white/60 dark:border-slate-800/70 dark:bg-slate-950/40">
-        <div class="mx-auto max-w-6xl px-4 py-12 md:py-16">
-          <!-- 流程区标题与说明 -->
-          <div v-motion :initial="fadeUpInitial" :visibleOnce="fadeUpVisible(0)" class="max-w-2xl">
-            <h2 class="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100 md:text-3xl">
-              {{ t('sections.workflow.title') }}
-            </h2>
-            <p class="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-300 md:text-base">
-              {{ t('sections.workflow.description') }}
-            </p>
-          </div>
-
-          <!-- 步骤卡片：循环渲染 workflow -->
-          <div class="mt-8 grid gap-4 md:grid-cols-3">
-            <div
-              v-for="(s, idx) in workflow"
-              :key="s.id"
-              v-motion
-              :initial="cardInitial"
-              :visibleOnce="cardVisibleOnce(idx)"
-              :hovered="cardHovered"
-              class="glass-card p-6"
-            >
-              <div class="text-xs font-semibold text-indigo-600 dark:text-indigo-400">
-                {{ t('sections.workflow.step', { index: idx + 1 }) }}
-              </div>
-              <div class="mt-2 text-sm font-semibold text-slate-900 dark:text-slate-100">
-                {{ s.title }}
-              </div>
-              <p class="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
-                {{ s.description }}
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- 场景区：适用场景（卡片列表） -->
-      <section id="scenarios" class="mx-auto max-w-6xl scroll-mt-24 px-4 py-12 md:py-16">
-        <!-- 场景区标题与说明 -->
-        <div v-motion :initial="fadeUpInitial" :visibleOnce="fadeUpVisible(0)" class="max-w-2xl">
-          <h2 class="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100 md:text-3xl">
-            {{ t('sections.scenarios.title') }}
-          </h2>
-          <p class="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-300 md:text-base">
-            {{ t('sections.scenarios.description') }}
-          </p>
-        </div>
-
-        <!-- 场景卡片：循环渲染 scenarios -->
-        <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          <div
-            v-for="(s, idx) in scenarios"
-            :key="s.id"
-            v-motion
-            :initial="cardInitial"
-            :visibleOnce="cardVisibleOnce(idx)"
-            :hovered="cardHovered"
-            class="glass-card group p-6"
-          >
-            <div class="flex items-start gap-3">
-              <span
-                class="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-slate-900 text-white transition-transform duration-300 group-hover:rotate-3 group-hover:scale-110 dark:bg-slate-800"
-              >
-                <component :is="s.icon" class="h-5 w-5" />
-              </span>
-              <div class="min-w-0">
-                <h3 class="text-sm font-semibold text-slate-900 dark:text-slate-100">
-                  {{ s.title }}
-                </h3>
-                <p class="mt-1 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
-                  {{ s.description }}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- FAQ：常见问题（折叠面板） -->
-      <section id="faq" class="scroll-mt-24 border-t border-slate-200/70 bg-white/60 dark:border-slate-800/70 dark:bg-slate-950/40">
-        <div class="mx-auto max-w-6xl px-4 py-12 md:py-16">
-          <!-- FAQ 标题与说明 -->
-          <div v-motion :initial="fadeUpInitial" :visibleOnce="fadeUpVisible(0)" class="max-w-2xl">
-            <h2 class="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100 md:text-3xl">
-              {{ t('sections.faq.title') }}
-            </h2>
-            <p class="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-300 md:text-base">
-              {{ t('sections.faq.description') }}
-            </p>
-          </div>
-
-          <!-- 问题列表：循环渲染 faqs -->
-          <div class="mt-8 space-y-3">
-            <div
-              v-for="(item, idx) in faqs"
+        <div class="mt-8 grid gap-6 lg:grid-cols-2">
+          <!-- 左侧：模板卡片 -->
+          <div class="grid gap-4 sm:grid-cols-2">
+            <button
+              v-for="(item, idx) in templates"
               :key="item.id"
               v-motion
               :initial="cardInitial"
               :visibleOnce="cardVisibleOnce(idx)"
               :hovered="cardHovered"
-              class="glass-card p-5"
+              type="button"
+              class="glass-card group w-full p-6 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/60 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-50 dark:focus-visible:ring-offset-slate-950"
+              :class="activeTemplateId === item.id ? 'ring-1 ring-indigo-500/30' : ''"
+              :aria-pressed="activeTemplateId === item.id"
+              @click="setActiveTemplate(item.id)"
             >
-              <button
-                :id="`faq-trigger-${idx}`"
-                type="button"
-                class="flex w-full items-center justify-between gap-4 text-left text-sm font-semibold text-slate-900 dark:text-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/60 focus-visible:ring-offset-2 focus-visible:ring-offset-white/60 dark:focus-visible:ring-offset-slate-950/60"
-                :aria-expanded="isFaqOpen(idx)"
-                :aria-controls="`faq-panel-${idx}`"
-                @click="toggleFaq(idx)"
-              >
-                <span>{{ item.q }}</span>
-                <ChevronDown
-                  :class="[
-                    'h-4 w-4 text-slate-500 dark:text-slate-400 transition-transform duration-200',
-                    isFaqOpen(idx) ? 'rotate-180' : '',
-                  ]"
-                />
-              </button>
-
-              <Transition
-                :css="false"
-                @before-enter="onFaqBeforeEnter"
-                @enter="onFaqEnter"
-                @after-enter="onFaqAfterEnter"
-                @before-leave="onFaqBeforeLeave"
-                @leave="onFaqLeave"
-                @after-leave="onFaqAfterLeave"
-              >
-                <div
-                  v-show="isFaqOpen(idx)"
-                  :id="`faq-panel-${idx}`"
-                  role="region"
-                  :aria-labelledby="`faq-trigger-${idx}`"
+              <div class="flex items-start gap-3">
+                <span
+                  class="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-slate-900 text-white transition-transform duration-300 group-hover:rotate-3 group-hover:scale-110 dark:bg-slate-800"
                 >
-                  <div class="pt-3">
-                    <p class="text-sm leading-relaxed text-slate-600 dark:text-slate-300">
-                      {{ item.a }}
+                  <component :is="item.icon" class="h-5 w-5" />
+                </span>
+                <div class="min-w-0">
+                  <div class="flex items-center gap-2">
+                    <h3 class="text-sm font-semibold text-slate-900 dark:text-slate-100">
+                      {{ item.title }}
+                    </h3>
+                    <span
+                      class="inline-flex items-center rounded-full border border-slate-200 bg-white/70 px-2 py-0.5 text-[11px] font-medium text-slate-600 dark:border-slate-800 dark:bg-slate-900/60 dark:text-slate-300"
+                    >
+                      {{ item.bgmLabel }}
+                    </span>
+                  </div>
+                  <p class="mt-1 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
+                    {{ item.description }}
+                  </p>
+                </div>
+              </div>
+            </button>
+          </div>
+
+          <!-- 右侧：当前模板详情 + BGM 开关 -->
+          <div v-motion :initial="cardInitial" :visibleOnce="cardVisibleOnce(2)" class="glass-card overflow-hidden p-6">
+            <div class="flex flex-wrap items-start justify-between gap-3">
+              <div>
+                <div class="text-xs font-semibold text-indigo-600 dark:text-indigo-400">
+                  {{ t('sections.templates.current') }}
+                </div>
+                <div class="mt-1 text-lg font-semibold tracking-tight text-slate-900 dark:text-slate-100">
+                  {{ activeTemplate.title }}
+                </div>
+              </div>
+
+              <button
+                type="button"
+                class="inline-flex items-center gap-2 rounded-xl border border-slate-200/70 bg-white/70 px-3 py-2 text-xs font-semibold text-slate-700 shadow-sm transition-colors hover:bg-white dark:border-slate-800/70 dark:bg-slate-950/60 dark:text-slate-200 dark:hover:bg-slate-950"
+                :aria-pressed="bgmEnabled"
+                @click="toggleBgm"
+              >
+                <Headphones class="h-4 w-4" />
+                {{ bgmToggleText }}
+              </button>
+            </div>
+
+            <p class="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
+              {{ activeTemplate.longDescription }}
+            </p>
+
+            <div class="mt-5 grid gap-3 sm:grid-cols-2">
+              <div
+                v-for="point in activeTemplate.points"
+                :key="point"
+                class="rounded-2xl bg-white/60 p-4 text-sm text-slate-700 dark:bg-slate-900/50 dark:text-slate-200"
+              >
+                {{ point }}
+              </div>
+            </div>
+
+            <div class="mt-5 flex flex-wrap gap-2">
+              <span v-for="tag in activeTemplate.tags" :key="tag" class="badge">
+                {{ tag }}
+              </span>
+            </div>
+
+            <p class="mt-4 text-xs text-slate-500 dark:text-slate-400">
+              {{ t('sections.templates.bgmHint') }}
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 第三屏：小语种特化模型 -->
+      <section id="workflow" class="scroll-mt-24 border-y border-slate-200/70 bg-white/60 dark:border-slate-800/70 dark:bg-slate-950/40">
+        <div class="mx-auto max-w-6xl px-4 py-12 md:py-16">
+          <div v-motion :initial="fadeUpInitial" :visibleOnce="fadeUpVisible(0)" class="max-w-2xl">
+            <h2 class="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100 md:text-3xl">
+              {{ t('sections.models.title') }}
+            </h2>
+            <p class="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-300 md:text-base">
+              {{ t('sections.models.description') }}
+            </p>
+          </div>
+
+          <div class="mt-8 grid gap-6 lg:grid-cols-2">
+            <!-- 左侧：小语种模板卡片 -->
+            <div class="grid gap-4 sm:grid-cols-2">
+              <div
+                v-for="(m, idx) in localeModels"
+                :key="m.id"
+                v-motion
+                :initial="cardInitial"
+                :visibleOnce="cardVisibleOnce(idx)"
+                :hovered="cardHovered"
+                class="glass-card group p-6"
+              >
+                <div class="flex items-start gap-3">
+                  <span
+                    class="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-indigo-600/10 transition-transform duration-300 group-hover:rotate-3 group-hover:scale-110 dark:bg-indigo-400/10"
+                  >
+                    <component :is="m.icon" class="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
+                  </span>
+                  <div class="min-w-0">
+                    <h3 class="text-sm font-semibold text-slate-900 dark:text-slate-100">
+                      {{ m.title }}
+                    </h3>
+                    <p class="mt-1 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
+                      {{ m.description }}
                     </p>
                   </div>
                 </div>
-              </Transition>
+
+                <ul class="mt-4 space-y-2 text-sm text-slate-600 dark:text-slate-300">
+                  <li v-for="bullet in m.bullets" :key="bullet" class="flex gap-2">
+                    <span class="mt-2 h-1.5 w-1.5 flex-none rounded-full bg-indigo-500/70"></span>
+                    <span>{{ bullet }}</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- 右侧：优势说明 -->
+            <div v-motion :initial="cardInitial" :visibleOnce="cardVisibleOnce(2)" class="glass-card p-6">
+              <div class="flex items-start gap-3">
+                <span
+                  class="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-slate-900 text-white dark:bg-slate-800"
+                >
+                  <Globe class="h-5 w-5" />
+                </span>
+                <div class="min-w-0">
+                  <h3 class="text-sm font-semibold text-slate-900 dark:text-slate-100">
+                    {{ t('sections.models.advantagesTitle') }}
+                  </h3>
+                  <p class="mt-1 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
+                    {{ t('sections.models.advantagesSubtitle') }}
+                  </p>
+                </div>
+              </div>
+
+              <div class="mt-5 space-y-3">
+                <div
+                  v-for="adv in modelAdvantages"
+                  :key="adv.id"
+                  class="flex gap-3 rounded-2xl bg-white/60 p-4 dark:bg-slate-900/50"
+                >
+                  <span class="inline-flex h-10 w-10 flex-none items-center justify-center rounded-2xl bg-slate-900 text-white dark:bg-slate-800">
+                    <component :is="adv.icon" class="h-5 w-5" />
+                  </span>
+                  <div class="min-w-0">
+                    <div class="text-sm font-semibold text-slate-900 dark:text-slate-100">{{ adv.title }}</div>
+                    <div class="mt-1 text-sm leading-relaxed text-slate-600 dark:text-slate-300">{{ adv.description }}</div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- 结尾 CTA：再次引导体验 / 留下联系方式 -->
+      <!-- 第四屏：关于我们 -->
+      <section id="scenarios" class="mx-auto max-w-6xl scroll-mt-24 px-4 py-12 md:py-16">
+        <div v-motion :initial="fadeUpInitial" :visibleOnce="fadeUpVisible(0)" class="max-w-2xl">
+          <h2 class="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100 md:text-3xl">
+            {{ t('sections.about.title') }}
+          </h2>
+          <p class="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-300 md:text-base">
+            {{ t('sections.about.description') }}
+          </p>
+        </div>
+
+        <!-- 商业化案例 -->
+        <div class="mt-10">
+          <div v-motion :initial="fadeUpInitial" :visibleOnce="fadeUpVisible(0.04)" class="max-w-2xl">
+            <h3 class="text-lg font-semibold tracking-tight text-slate-900 dark:text-slate-100">
+              {{ t('about.cases.title') }}
+            </h3>
+            <p class="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
+              {{ t('about.cases.description') }}
+            </p>
+          </div>
+
+          <div class="mt-6 grid gap-4 md:grid-cols-3">
+            <div
+              v-for="(c, idx) in commercialCases"
+              :key="c.id"
+              v-motion
+              :initial="cardInitial"
+              :visibleOnce="cardVisibleOnce(idx)"
+              :hovered="cardHovered"
+              class="glass-card group p-6"
+            >
+              <div class="flex items-start gap-3">
+                <span
+                  class="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-slate-900 text-white transition-transform duration-300 group-hover:rotate-3 group-hover:scale-110 dark:bg-slate-800"
+                >
+                  <component :is="c.icon" class="h-5 w-5" />
+                </span>
+                <div class="min-w-0">
+                  <div class="text-sm font-semibold text-slate-900 dark:text-slate-100">
+                    {{ c.title }}
+                  </div>
+                  <p class="mt-1 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
+                    {{ c.description }}
+                  </p>
+                </div>
+              </div>
+
+              <div class="mt-4 grid grid-cols-2 gap-3 text-xs">
+                <div
+                  v-for="(m, mIdx) in c.metrics"
+                  :key="`${c.id}-metric-${mIdx}`"
+                  class="rounded-2xl bg-white/60 p-3 dark:bg-slate-900/50"
+                >
+                  <div class="text-slate-500 dark:text-slate-400">{{ m.label }}</div>
+                  <div class="mt-1 font-semibold text-slate-900 dark:text-slate-100">{{ m.value }}</div>
+                </div>
+              </div>
+
+              <p class="mt-4 text-xs leading-relaxed text-slate-500 dark:text-slate-400">
+                {{ c.note }}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 比赛与获奖：珊格/栅格展示（后续可替换为图片） -->
+        <div class="mt-12">
+          <div v-motion :initial="fadeUpInitial" :visibleOnce="fadeUpVisible(0.04)" class="max-w-2xl">
+            <h3 class="text-lg font-semibold tracking-tight text-slate-900 dark:text-slate-100">
+              {{ t('about.awards.title') }}
+            </h3>
+            <p class="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
+              {{ t('about.awards.description') }}
+            </p>
+          </div>
+
+          <div class="mt-6 columns-1 gap-4 sm:columns-2 lg:columns-3">
+            <div v-for="(a, idx) in awards" :key="a.id" class="mb-4 break-inside-avoid">
+              <div v-motion :initial="cardInitial" :visibleOnce="cardVisibleOnce(idx)" class="glass-card overflow-hidden">
+                <div class="relative aspect-[4/3] bg-slate-900/5 dark:bg-white/5">
+                  <img v-if="a.image" :src="a.image" :alt="a.title" class="h-full w-full object-cover" loading="lazy" />
+                  <div
+                    v-else
+                    class="flex h-full w-full items-center justify-center bg-gradient-to-br from-indigo-500/10 to-fuchsia-500/10"
+                  >
+                    <div
+                      class="flex items-center gap-2 rounded-2xl border border-slate-200/60 bg-white/60 px-3 py-2 text-xs font-semibold text-slate-700 dark:border-slate-800/60 dark:bg-slate-950/50 dark:text-slate-200"
+                    >
+                      <Trophy class="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
+                      {{ t('about.awards.placeholder') }}
+                    </div>
+                  </div>
+                </div>
+                <div class="p-4">
+                  <div class="text-sm font-semibold text-slate-900 dark:text-slate-100">{{ a.title }}</div>
+                  <div class="mt-1 text-xs text-slate-500 dark:text-slate-400">{{ a.subtitle }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 政府评比企业 / 合作伙伴 -->
+        <div class="mt-12 grid gap-6 lg:grid-cols-2">
+          <div v-motion :initial="cardInitial" :visibleOnce="cardVisibleOnce(0)" class="glass-card p-6">
+            <div class="flex items-start gap-3">
+              <span class="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-slate-900 text-white dark:bg-slate-800">
+                <Building2 class="h-5 w-5" />
+              </span>
+              <div class="min-w-0">
+                <h3 class="text-sm font-semibold text-slate-900 dark:text-slate-100">
+                  {{ t('about.government.title') }}
+                </h3>
+                <p class="mt-1 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
+                  {{ t('about.government.description') }}
+                </p>
+              </div>
+            </div>
+
+            <div class="mt-5 flex flex-wrap gap-2">
+              <span v-for="badge in governmentBadges" :key="badge" class="badge">
+                {{ badge }}
+              </span>
+            </div>
+          </div>
+
+          <div v-motion :initial="cardInitial" :visibleOnce="cardVisibleOnce(1)" class="glass-card p-6">
+            <div class="flex items-start gap-3">
+              <span class="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-slate-900 text-white dark:bg-slate-800">
+                <Handshake class="h-5 w-5" />
+              </span>
+              <div class="min-w-0">
+                <h3 class="text-sm font-semibold text-slate-900 dark:text-slate-100">
+                  {{ t('about.partners.title') }}
+                </h3>
+                <p class="mt-1 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
+                  {{ t('about.partners.description') }}
+                </p>
+              </div>
+            </div>
+
+            <div class="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3">
+              <div
+                v-for="p in partners"
+                :key="p.name"
+                class="flex items-center justify-center rounded-2xl bg-white/60 p-4 text-xs font-semibold text-slate-700 dark:bg-slate-900/50 dark:text-slate-200"
+              >
+                {{ p.name }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 底部：联系我们（微信 / 邮箱） -->
       <section id="cta" class="mx-auto max-w-6xl scroll-mt-24 px-4 py-12 md:py-16">
         <div
           v-motion
@@ -440,56 +600,119 @@
           class="rounded-3xl bg-gradient-to-br from-indigo-600 to-fuchsia-600 px-6 py-10 text-white md:px-10"
         >
           <div class="grid gap-8 md:grid-cols-2 md:items-center">
-            <!-- 左侧：CTA 文案 -->
             <div>
               <h2 class="text-2xl font-bold tracking-tight md:text-3xl">
-                {{ t('sections.cta.title') }}
+                {{ t('sections.contact.title') }}
               </h2>
               <p class="mt-3 text-sm leading-relaxed text-white/85 md:text-base">
-                {{ t('sections.cta.description', { siteName }) }}
+                {{ t('sections.contact.description', { siteName }) }}
               </p>
+
+              <div class="mt-6 flex flex-col gap-3 sm:flex-row">
+                <button
+                  type="button"
+                  class="group inline-flex items-center justify-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-semibold text-slate-900 shadow-sm transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-white/95 hover:shadow-md disabled:cursor-not-allowed disabled:opacity-60"
+                  :disabled="!contactWeChat"
+                  @click="copyContact('wechat')"
+                >
+                  <Copy class="h-4 w-4" />
+                  {{ copyWeChatText }}
+                </button>
+                <a
+                  :href="mailtoLink"
+                  class="inline-flex items-center justify-center gap-2 rounded-xl border border-white/30 bg-white/10 px-5 py-3 text-sm font-semibold text-white transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-white/15"
+                  :class="!contactEmail ? 'pointer-events-none opacity-60' : ''"
+                  :aria-disabled="!contactEmail"
+                >
+                  <Mail class="h-4 w-4" />
+                  {{ t('contact.actions.email') }}
+                </a>
+              </div>
             </div>
 
-            <!-- 右侧：CTA 按钮组（立即体验 / 商务合作） -->
-            <div class="flex flex-col gap-3 sm:flex-row md:justify-end">
-              <a
-                :href="appUrl"
-                @click="onMaybeSmoothAnchorClick"
-                class="group inline-flex items-center justify-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-semibold text-slate-900 shadow-sm transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-white/95 hover:shadow-md"
-                :target="isExternalAppUrl ? '_blank' : undefined"
-                :rel="isExternalAppUrl ? 'noopener noreferrer' : undefined"
-              >
-                {{ t('actions.tryNow') }}
-                <ArrowRight class="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" />
-              </a>
-              <a
-                :href="mailtoLink"
-                class="inline-flex items-center justify-center rounded-xl border border-white/30 bg-white/10 px-5 py-3 text-sm font-semibold text-white transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-white/15"
-              >
-                {{ t('actions.business') }}
-              </a>
+            <div class="grid gap-4 sm:grid-cols-2">
+              <div class="rounded-2xl border border-white/20 bg-white/10 p-5 backdrop-blur">
+                <div class="flex items-center gap-2 text-sm font-semibold">
+                  <QrCode class="h-4 w-4" />
+                  {{ t('contact.wechat.label') }}
+                </div>
+                <div class="mt-2 text-sm text-white/90">
+                  {{ contactWeChat || t('contact.wechat.placeholder') }}
+                </div>
+
+                <div class="mt-4 overflow-hidden rounded-xl border border-white/20 bg-white/5">
+                  <img
+                    v-if="contactWeChatQr"
+                    :src="contactWeChatQr"
+                    :alt="t('contact.wechat.qrAlt')"
+                    class="h-32 w-full object-cover"
+                    loading="lazy"
+                  />
+                  <div v-else class="flex h-32 items-center justify-center text-xs text-white/70">
+                    {{ t('contact.wechat.qrPlaceholder') }}
+                  </div>
+                </div>
+              </div>
+
+              <div class="rounded-2xl border border-white/20 bg-white/10 p-5 backdrop-blur">
+                <div class="flex items-center gap-2 text-sm font-semibold">
+                  <Mail class="h-4 w-4" />
+                  {{ t('contact.email.label') }}
+                </div>
+                <div class="mt-2 text-sm text-white/90">
+                  {{ contactEmail || t('contact.email.placeholder') }}
+                </div>
+
+                <button
+                  type="button"
+                  class="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-white/30 bg-white/10 px-4 py-2 text-sm font-semibold text-white transition-all duration-300 ease-out hover:bg-white/15 disabled:cursor-not-allowed disabled:opacity-60"
+                  :disabled="!contactEmail"
+                  @click="copyContact('email')"
+                >
+                  <Copy class="h-4 w-4" />
+                  {{ copyEmailText }}
+                </button>
+              </div>
             </div>
           </div>
+
+          <p class="mt-6 text-xs leading-relaxed text-white/75">
+            {{ t('sections.contact.note') }}
+          </p>
         </div>
       </section>
     </main>
 
     <!-- 页脚：版权信息与站内锚点 -->
     <footer class="border-t border-slate-200/70 bg-white/75 dark:border-slate-800/70 dark:bg-slate-950/70">
-      <div
-        class="mx-auto flex max-w-6xl flex-col gap-3 px-4 py-8 text-sm text-slate-500 dark:text-slate-400 md:flex-row md:items-center md:justify-between"
-      >
-        <!-- 版权信息 -->
-        <div>© {{ year }} {{ siteName }}. All rights reserved.</div>
-        <!-- 快速链接：站内锚点 -->
-        <div class="flex flex-wrap gap-x-5 gap-y-2">
+      <div class="mx-auto grid max-w-6xl gap-6 px-4 py-10 text-sm text-slate-500 dark:text-slate-400 md:grid-cols-2 md:items-start">
+        <div class="space-y-2">
+          <div>© {{ year }} {{ siteName }}. All rights reserved.</div>
+          <div class="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs">
+            <div class="inline-flex items-center gap-2">
+              <QrCode class="h-4 w-4" />
+              <span class="font-medium text-slate-600 dark:text-slate-300">{{ t('contact.wechat.label') }}:</span>
+              <span>{{ contactWeChat || t('contact.wechat.placeholder') }}</span>
+            </div>
+            <div class="inline-flex items-center gap-2">
+              <Mail class="h-4 w-4" />
+              <span class="font-medium text-slate-600 dark:text-slate-300">{{ t('contact.email.label') }}:</span>
+              <span>{{ contactEmail || t('contact.email.placeholder') }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap gap-x-5 gap-y-2 md:justify-end">
           <a class="hover:text-slate-700 dark:hover:text-slate-200" href="#features" @click="onMaybeSmoothAnchorClick">
             {{ t('sections.footerLinks.features') }}
           </a>
           <a class="hover:text-slate-700 dark:hover:text-slate-200" href="#workflow" @click="onMaybeSmoothAnchorClick">
             {{ t('sections.footerLinks.workflow') }}
           </a>
-          <a class="hover:text-slate-700 dark:hover:text-slate-200" href="#faq" @click="onMaybeSmoothAnchorClick">
+          <a class="hover:text-slate-700 dark:hover:text-slate-200" href="#scenarios" @click="onMaybeSmoothAnchorClick">
+            {{ t('sections.footerLinks.scenarios') }}
+          </a>
+          <a class="hover:text-slate-700 dark:hover:text-slate-200" href="#cta" @click="onMaybeSmoothAnchorClick">
             {{ t('sections.footerLinks.faq') }}
           </a>
         </div>
@@ -503,18 +726,26 @@ import type { Component } from 'vue'
 import {
   ArrowRight,
   AudioLines,
-  ChevronDown,
-  Download,
+  Building2,
+  Clapperboard,
+  Copy,
+  Handshake,
+  Globe,
   Headphones,
+  Languages,
   Layers,
+  Mail,
+  Megaphone,
   Monitor,
   Moon,
   Music,
   Play,
-  ShieldCheck,
+  QrCode,
+  ShoppingBag,
   SlidersHorizontal,
   Sparkles,
   Sun,
+  Trophy,
   Zap,
 } from 'lucide-vue-next'
 
@@ -697,105 +928,23 @@ const onMaybeSmoothAnchorClick = (event: MouseEvent) => {
   scrollToHash(href)
 }
 
-const openFaqIndexes = ref<number[]>([])
-
-const isFaqOpen = (index: number) => openFaqIndexes.value.includes(index)
-
-const toggleFaq = (index: number) => {
-  openFaqIndexes.value = isFaqOpen(index)
-    ? openFaqIndexes.value.filter((value) => value !== index)
-    : [...openFaqIndexes.value, index]
-}
-
-const faqTransition = {
-  durationMs: 260,
-  easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
-} as const
-
-const onFaqBeforeEnter = (element: Element) => {
-  const el = element as HTMLElement
-  el.style.height = '0'
-  el.style.opacity = '0'
-  el.style.overflow = 'hidden'
-  el.style.willChange = 'height,opacity'
-}
-
-const onFaqEnter = (element: Element, done: () => void) => {
-  if (prefersReducedMotion.value) {
-    done()
-    return
-  }
-
-  const el = element as HTMLElement
-  el.style.transition = `height ${faqTransition.durationMs}ms ${faqTransition.easing}, opacity ${faqTransition.durationMs}ms ${faqTransition.easing}`
-  const targetHeight = el.scrollHeight
-
-  requestAnimationFrame(() => {
-    el.style.height = `${targetHeight}px`
-    el.style.opacity = '1'
-  })
-
-  const onEnd = (event: TransitionEvent) => {
-    if (event.target !== el) return
-    if (event.propertyName !== 'height') return
-    done()
-  }
-  el.addEventListener('transitionend', onEnd, { once: true })
-}
-
-const onFaqAfterEnter = (element: Element) => {
-  const el = element as HTMLElement
-  el.style.height = 'auto'
-  el.style.opacity = ''
-  el.style.overflow = ''
-  el.style.transition = ''
-  el.style.willChange = ''
-}
-
-const onFaqBeforeLeave = (element: Element) => {
-  const el = element as HTMLElement
-  el.style.height = `${el.scrollHeight}px`
-  el.style.opacity = '1'
-  el.style.overflow = 'hidden'
-  el.style.willChange = 'height,opacity'
-}
-
-const onFaqLeave = (element: Element, done: () => void) => {
-  if (prefersReducedMotion.value) {
-    done()
-    return
-  }
-
-  const el = element as HTMLElement
-  el.style.transition = `height ${faqTransition.durationMs}ms ${faqTransition.easing}, opacity ${faqTransition.durationMs}ms ${faqTransition.easing}`
-
-  requestAnimationFrame(() => {
-    el.style.height = '0'
-    el.style.opacity = '0'
-  })
-
-  const onEnd = (event: TransitionEvent) => {
-    if (event.target !== el) return
-    if (event.propertyName !== 'height') return
-    done()
-  }
-  el.addEventListener('transitionend', onEnd, { once: true })
-}
-
-const onFaqAfterLeave = (element: Element) => {
-  const el = element as HTMLElement
-  el.style.height = ''
-  el.style.opacity = ''
-  el.style.overflow = ''
-  el.style.transition = ''
-  el.style.willChange = ''
-}
-
 onBeforeUnmount(() => {
   cancelAnchorScroll()
-  if (previewTiltFrame == null) return
-  cancelAnimationFrame(previewTiltFrame)
-  previewTiltFrame = null
+  stopBgmScheduler()
+  if (bgmAudioContext) void bgmAudioContext.close().catch(() => {})
+  bgmAudioContext = null
+  bgmMaster = null
+  bgmFilter = null
+
+  if (copyResetTimer != null) {
+    window.clearTimeout(copyResetTimer)
+    copyResetTimer = null
+  }
+
+  if (previewTiltFrame != null) {
+    cancelAnimationFrame(previewTiltFrame)
+    previewTiltFrame = null
+  }
 })
 
 const updatePreviewTilt = () => {
@@ -860,6 +1009,8 @@ const ogImage = computed(() => (config.public.ogImage as string) || '/og-image.s
 const appUrl = computed(() => (config.public.appUrl as string) || '#cta')
 const isExternalAppUrl = computed(() => /^https?:\/\//i.test(appUrl.value))
 const contactEmail = computed(() => (config.public.contactEmail as string) || '')
+const contactWeChat = computed(() => (config.public.contactWeChat as string) || '')
+const contactWeChatQr = computed(() => (config.public.contactWeChatQr as string) || '')
 
 const pageTitle = computed(() => t('meta.title', { siteName }))
 const ogTitle = computed(() => t('meta.ogTitle', { siteName }))
@@ -880,6 +1031,61 @@ const mailtoLink = computed(() => {
   if (!contactEmail.value) return '#'
   return `mailto:${contactEmail.value}`
 })
+
+type CopyTarget = 'wechat' | 'email'
+
+const copiedTarget = ref<CopyTarget | null>(null)
+let copyResetTimer: number | null = null
+
+const copyWeChatText = computed(() =>
+  copiedTarget.value === 'wechat' ? t('contact.actions.copied') : t('contact.actions.copyWeChat'),
+)
+const copyEmailText = computed(() =>
+  copiedTarget.value === 'email' ? t('contact.actions.copied') : t('contact.actions.copyEmail'),
+)
+
+const writeClipboard = async (text: string) => {
+  if (!import.meta.client) return false
+
+  try {
+    await navigator.clipboard.writeText(text)
+    return true
+  } catch {
+    // Fallback for older browsers / non-secure contexts
+    try {
+      const textarea = document.createElement('textarea')
+      textarea.value = text
+      textarea.setAttribute('readonly', 'true')
+      textarea.style.position = 'fixed'
+      textarea.style.top = '0'
+      textarea.style.left = '0'
+      textarea.style.opacity = '0'
+      document.body.appendChild(textarea)
+      textarea.focus()
+      textarea.select()
+      const ok = document.execCommand('copy')
+      document.body.removeChild(textarea)
+      return ok
+    } catch {
+      return false
+    }
+  }
+}
+
+const copyContact = async (target: CopyTarget) => {
+  const text = target === 'wechat' ? contactWeChat.value : contactEmail.value
+  if (!text) return
+
+  const ok = await writeClipboard(text)
+  if (!ok) return
+
+  copiedTarget.value = target
+  if (copyResetTimer != null) window.clearTimeout(copyResetTimer)
+  copyResetTimer = window.setTimeout(() => {
+    copiedTarget.value = null
+    copyResetTimer = null
+  }, 1500)
+}
 
 const year = new Date().getFullYear()
 
@@ -919,103 +1125,570 @@ useSchemaOrg([
   }),
 ])
 
-const featureData = [
+const templateData = [
   {
-    id: 'textToMusic',
-    titleKey: 'features.items.textToMusic.title',
-    descriptionKey: 'features.items.textToMusic.description',
-    icon: Sparkles,
+    id: 'general',
+    titleKey: 'templates.items.general.title',
+    descriptionKey: 'templates.items.general.description',
+    longDescriptionKey: 'templates.items.general.longDescription',
+    pointKeys: [
+      'templates.items.general.points.0',
+      'templates.items.general.points.1',
+      'templates.items.general.points.2',
+      'templates.items.general.points.3',
+    ],
+    tagKeys: [
+      'templates.items.general.tags.0',
+      'templates.items.general.tags.1',
+      'templates.items.general.tags.2',
+    ],
+    bgmLabelKey: 'templates.bgm.labels.lofi',
+    bgmPreset: 'lofi',
+    icon: Layers,
+    theme: {
+      glow1: 'rgba(99, 102, 241, 0.24)',
+      glow2: 'rgba(168, 85, 247, 0.18)',
+      glow3: 'rgba(56, 189, 248, 0.12)',
+    },
   },
   {
-    id: 'styleControl',
-    titleKey: 'features.items.styleControl.title',
-    descriptionKey: 'features.items.styleControl.description',
+    id: 'shortDrama',
+    titleKey: 'templates.items.shortDrama.title',
+    descriptionKey: 'templates.items.shortDrama.description',
+    longDescriptionKey: 'templates.items.shortDrama.longDescription',
+    pointKeys: [
+      'templates.items.shortDrama.points.0',
+      'templates.items.shortDrama.points.1',
+      'templates.items.shortDrama.points.2',
+      'templates.items.shortDrama.points.3',
+    ],
+    tagKeys: [
+      'templates.items.shortDrama.tags.0',
+      'templates.items.shortDrama.tags.1',
+      'templates.items.shortDrama.tags.2',
+    ],
+    bgmLabelKey: 'templates.bgm.labels.cinematic',
+    bgmPreset: 'cinematic',
+    icon: Play,
+    theme: {
+      glow1: 'rgba(244, 63, 94, 0.18)',
+      glow2: 'rgba(99, 102, 241, 0.18)',
+      glow3: 'rgba(251, 146, 60, 0.14)',
+    },
+  },
+  {
+    id: 'comic',
+    titleKey: 'templates.items.comic.title',
+    descriptionKey: 'templates.items.comic.description',
+    longDescriptionKey: 'templates.items.comic.longDescription',
+    pointKeys: [
+      'templates.items.comic.points.0',
+      'templates.items.comic.points.1',
+      'templates.items.comic.points.2',
+      'templates.items.comic.points.3',
+    ],
+    tagKeys: [
+      'templates.items.comic.tags.0',
+      'templates.items.comic.tags.1',
+      'templates.items.comic.tags.2',
+    ],
+    bgmLabelKey: 'templates.bgm.labels.anime',
+    bgmPreset: 'anime',
+    icon: Sparkles,
+    theme: {
+      glow1: 'rgba(34, 197, 94, 0.16)',
+      glow2: 'rgba(59, 130, 246, 0.18)',
+      glow3: 'rgba(236, 72, 153, 0.14)',
+    },
+  },
+  {
+    id: 'ads',
+    titleKey: 'templates.items.ads.title',
+    descriptionKey: 'templates.items.ads.description',
+    longDescriptionKey: 'templates.items.ads.longDescription',
+    pointKeys: [
+      'templates.items.ads.points.0',
+      'templates.items.ads.points.1',
+      'templates.items.ads.points.2',
+      'templates.items.ads.points.3',
+    ],
+    tagKeys: [
+      'templates.items.ads.tags.0',
+      'templates.items.ads.tags.1',
+      'templates.items.ads.tags.2',
+    ],
+    bgmLabelKey: 'templates.bgm.labels.punchy',
+    bgmPreset: 'ads',
+    icon: Zap,
+    theme: {
+      glow1: 'rgba(245, 158, 11, 0.20)',
+      glow2: 'rgba(168, 85, 247, 0.16)',
+      glow3: 'rgba(99, 102, 241, 0.14)',
+    },
+  },
+  {
+    id: 'dub',
+    titleKey: 'templates.items.dub.title',
+    descriptionKey: 'templates.items.dub.description',
+    longDescriptionKey: 'templates.items.dub.longDescription',
+    pointKeys: [
+      'templates.items.dub.points.0',
+      'templates.items.dub.points.1',
+      'templates.items.dub.points.2',
+      'templates.items.dub.points.3',
+    ],
+    tagKeys: [
+      'templates.items.dub.tags.0',
+      'templates.items.dub.tags.1',
+      'templates.items.dub.tags.2',
+    ],
+    bgmLabelKey: 'templates.bgm.labels.clean',
+    bgmPreset: 'dub',
+    icon: AudioLines,
+    theme: {
+      glow1: 'rgba(14, 165, 233, 0.18)',
+      glow2: 'rgba(99, 102, 241, 0.16)',
+      glow3: 'rgba(148, 163, 184, 0.12)',
+    },
+  },
+] as const
+
+type TemplateId = (typeof templateData)[number]['id']
+
+type TemplateTheme = {
+  glow1: string
+  glow2: string
+  glow3: string
+}
+
+type TemplateViewModel = {
+  id: TemplateId
+  title: string
+  description: string
+  longDescription: string
+  points: string[]
+  tags: string[]
+  bgmLabel: string
+  bgmPreset: keyof typeof bgmPresets
+  icon: Component
+  theme: TemplateTheme
+}
+
+const templates = computed<TemplateViewModel[]>(() =>
+  templateData.map((item) => ({
+    id: item.id,
+    title: t(item.titleKey),
+    description: t(item.descriptionKey),
+    longDescription: t(item.longDescriptionKey),
+    points: item.pointKeys.map((key) => t(key)),
+    tags: item.tagKeys.map((key) => t(key)),
+    bgmLabel: t(item.bgmLabelKey),
+    bgmPreset: item.bgmPreset,
+    icon: item.icon,
+    theme: item.theme,
+  })),
+)
+
+const activeTemplateId = ref<TemplateId>(templateData[0].id)
+const activeTemplate = computed(() => templates.value.find((item) => item.id === activeTemplateId.value) ?? templates.value[0])
+
+const setActiveTemplate = (id: TemplateId) => {
+  activeTemplateId.value = id
+}
+
+const templateStageStyle = computed(() => {
+  const theme = activeTemplate.value?.theme
+  return {
+    '--tpl-glow-1': theme?.glow1 ?? 'rgba(99, 102, 241, 0.18)',
+    '--tpl-glow-2': theme?.glow2 ?? 'rgba(168, 85, 247, 0.14)',
+    '--tpl-glow-3': theme?.glow3 ?? 'rgba(56, 189, 248, 0.12)',
+  } as Record<string, string>
+})
+
+type BgmPreset = {
+  tempo: number
+  rootHz: number
+  wave: OscillatorType
+  filterHz: number
+  masterGain: number
+  noteGain: number
+  bassGain: number
+  scaleSemitones: number[]
+  sequence: number[]
+} & { labelKey: string }
+
+const bgmPresets = {
+  lofi: {
+    labelKey: 'templates.bgm.labels.lofi',
+    tempo: 86,
+    rootHz: 220,
+    wave: 'triangle',
+    filterHz: 1500,
+    masterGain: 0.22,
+    noteGain: 0.08,
+    bassGain: 0.05,
+    scaleSemitones: [0, 3, 5, 7, 10],
+    sequence: [0, 2, 3, 2, 0, 2, 4, 2],
+  },
+  cinematic: {
+    labelKey: 'templates.bgm.labels.cinematic',
+    tempo: 98,
+    rootHz: 196,
+    wave: 'sine',
+    filterHz: 1200,
+    masterGain: 0.24,
+    noteGain: 0.09,
+    bassGain: 0.06,
+    scaleSemitones: [0, 2, 3, 5, 7, 10],
+    sequence: [0, 3, 5, 3, 0, 2, 4, 2],
+  },
+  anime: {
+    labelKey: 'templates.bgm.labels.anime',
+    tempo: 122,
+    rootHz: 262,
+    wave: 'sawtooth',
+    filterHz: 2000,
+    masterGain: 0.18,
+    noteGain: 0.06,
+    bassGain: 0.04,
+    scaleSemitones: [0, 2, 4, 7, 9],
+    sequence: [0, 2, 1, 3, 2, 4, 3, 1],
+  },
+  ads: {
+    labelKey: 'templates.bgm.labels.punchy',
+    tempo: 128,
+    rootHz: 330,
+    wave: 'square',
+    filterHz: 2600,
+    masterGain: 0.13,
+    noteGain: 0.05,
+    bassGain: 0.035,
+    scaleSemitones: [0, 4, 7, 11],
+    sequence: [0, 2, 1, 3, 0, 2, 1, 3],
+  },
+  dub: {
+    labelKey: 'templates.bgm.labels.clean',
+    tempo: 104,
+    rootHz: 247,
+    wave: 'triangle',
+    filterHz: 1700,
+    masterGain: 0.16,
+    noteGain: 0.06,
+    bassGain: 0.04,
+    scaleSemitones: [0, 2, 3, 5, 7, 9, 10],
+    sequence: [0, 2, 4, 2, 0, 3, 5, 3],
+  },
+} as const satisfies Record<string, BgmPreset>
+
+const bgmEnabled = ref(false)
+const bgmToggleText = computed(() => (bgmEnabled.value ? t('templates.bgm.toggleOff') : t('templates.bgm.toggleOn')))
+
+let bgmAudioContext: AudioContext | null = null
+let bgmMaster: GainNode | null = null
+let bgmFilter: BiquadFilterNode | null = null
+let bgmScheduler: number | null = null
+let bgmNextTime = 0
+let bgmStep = 0
+
+const getAudioContextCtor = () => {
+  if (!import.meta.client) return null
+  return window.AudioContext || (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext || null
+}
+
+const ensureBgmAudio = async () => {
+  if (!import.meta.client) return false
+  const AudioCtor = getAudioContextCtor()
+  if (!AudioCtor) return false
+
+  if (bgmAudioContext && bgmMaster && bgmFilter) return true
+
+  bgmAudioContext = new AudioCtor()
+  bgmMaster = bgmAudioContext.createGain()
+  bgmFilter = bgmAudioContext.createBiquadFilter()
+
+  bgmFilter.type = 'lowpass'
+  bgmFilter.frequency.value = 1600
+  bgmMaster.gain.value = 0
+
+  bgmFilter.connect(bgmMaster)
+  bgmMaster.connect(bgmAudioContext.destination)
+
+  return true
+}
+
+const semitoneToHz = (rootHz: number, semitone: number) => rootHz * Math.pow(2, semitone / 12)
+
+const scheduleBgmNote = (preset: BgmPreset, time: number, hz: number, seconds: number, gainValue: number) => {
+  if (!bgmAudioContext || !bgmFilter) return
+
+  const osc = bgmAudioContext.createOscillator()
+  osc.type = preset.wave
+  osc.frequency.setValueAtTime(hz, time)
+
+  const gain = bgmAudioContext.createGain()
+  gain.gain.setValueAtTime(0.0001, time)
+  gain.gain.exponentialRampToValueAtTime(Math.max(0.0002, gainValue), time + 0.015)
+  gain.gain.exponentialRampToValueAtTime(0.0001, time + seconds)
+
+  osc.connect(gain)
+  gain.connect(bgmFilter)
+
+  osc.start(time)
+  osc.stop(time + seconds + 0.05)
+}
+
+const scheduleBgm = () => {
+  if (!bgmAudioContext) return
+
+  const preset = bgmPresets[activeTemplate.value.bgmPreset]
+  const stepSeconds = (60 / preset.tempo) / 2
+  const lookAhead = 0.35
+
+  while (bgmNextTime < bgmAudioContext.currentTime + lookAhead) {
+    const stepIndex = preset.sequence[bgmStep % preset.sequence.length] ?? 0
+    const semitone = preset.scaleSemitones[stepIndex % preset.scaleSemitones.length] ?? 0
+    const noteHz = semitoneToHz(preset.rootHz, semitone)
+
+    scheduleBgmNote(preset, bgmNextTime, noteHz, stepSeconds * 0.92, preset.noteGain)
+
+    if (bgmStep % 4 === 0) {
+      scheduleBgmNote(preset, bgmNextTime, noteHz / 2, stepSeconds * 1.8, preset.bassGain)
+    }
+
+    bgmNextTime += stepSeconds
+    bgmStep += 1
+  }
+}
+
+const startBgmScheduler = () => {
+  if (bgmScheduler != null) return
+  bgmScheduler = window.setInterval(scheduleBgm, 40)
+}
+
+const stopBgmScheduler = () => {
+  if (bgmScheduler == null) return
+  window.clearInterval(bgmScheduler)
+  bgmScheduler = null
+}
+
+const applyBgmPreset = (preset: BgmPreset) => {
+  if (!bgmAudioContext || !bgmMaster || !bgmFilter) return
+  bgmFilter.frequency.setTargetAtTime(preset.filterHz, bgmAudioContext.currentTime, 0.06)
+  bgmMaster.gain.setTargetAtTime(preset.masterGain, bgmAudioContext.currentTime, 0.06)
+}
+
+const startBgm = async () => {
+  const ok = await ensureBgmAudio()
+  if (!ok || !bgmAudioContext) return
+
+  try {
+    await bgmAudioContext.resume()
+  } catch {
+    return
+  }
+
+  bgmNextTime = bgmAudioContext.currentTime + 0.05
+  bgmStep = 0
+  applyBgmPreset(bgmPresets[activeTemplate.value.bgmPreset])
+  startBgmScheduler()
+}
+
+const stopBgm = async () => {
+  stopBgmScheduler()
+  if (!bgmAudioContext || !bgmMaster) return
+
+  bgmMaster.gain.setTargetAtTime(0, bgmAudioContext.currentTime, 0.05)
+  try {
+    await bgmAudioContext.suspend()
+  } catch {
+    // ignore
+  }
+}
+
+const toggleBgm = async () => {
+  bgmEnabled.value = !bgmEnabled.value
+  if (!bgmEnabled.value) {
+    await stopBgm()
+    return
+  }
+  await startBgm()
+}
+
+watch(activeTemplateId, async () => {
+  if (!bgmEnabled.value) return
+  await startBgm()
+})
+
+const localeModelData = [
+  {
+    id: 'thai',
+    titleKey: 'models.items.thai.title',
+    descriptionKey: 'models.items.thai.description',
+    bulletKeys: [
+      'models.items.thai.bullets.0',
+      'models.items.thai.bullets.1',
+      'models.items.thai.bullets.2',
+    ],
+    icon: Languages,
+  },
+  {
+    id: 'khmer',
+    titleKey: 'models.items.khmer.title',
+    descriptionKey: 'models.items.khmer.description',
+    bulletKeys: [
+      'models.items.khmer.bullets.0',
+      'models.items.khmer.bullets.1',
+      'models.items.khmer.bullets.2',
+    ],
+    icon: AudioLines,
+  },
+] as const
+
+const localeModels = computed(() =>
+  localeModelData.map((item) => ({
+    id: item.id,
+    title: t(item.titleKey),
+    description: t(item.descriptionKey),
+    bullets: item.bulletKeys.map((key) => t(key)),
+    icon: item.icon,
+  })),
+)
+
+const modelAdvantageData = [
+  {
+    id: 'corpus',
+    titleKey: 'models.advantages.corpus.title',
+    descriptionKey: 'models.advantages.corpus.description',
+    icon: Languages,
+  },
+  {
+    id: 'control',
+    titleKey: 'models.advantages.control.title',
+    descriptionKey: 'models.advantages.control.description',
     icon: SlidersHorizontal,
   },
   {
-    id: 'multiVersion',
-    titleKey: 'features.items.multiVersion.title',
-    descriptionKey: 'features.items.multiVersion.description',
-    icon: Zap,
-  },
-  {
-    id: 'highQuality',
-    titleKey: 'features.items.highQuality.title',
-    descriptionKey: 'features.items.highQuality.description',
+    id: 'voiceover',
+    titleKey: 'models.advantages.voiceover.title',
+    descriptionKey: 'models.advantages.voiceover.description',
     icon: AudioLines,
   },
   {
-    id: 'stems',
-    titleKey: 'features.items.stems.title',
-    descriptionKey: 'features.items.stems.description',
+    id: 'delivery',
+    titleKey: 'models.advantages.delivery.title',
+    descriptionKey: 'models.advantages.delivery.description',
     icon: Layers,
   },
+] as const
+
+const modelAdvantages = computed(() =>
+  modelAdvantageData.map((item) => ({
+    id: item.id,
+    title: t(item.titleKey),
+    description: t(item.descriptionKey),
+    icon: item.icon,
+  })),
+)
+
+const commercialCaseData = [
   {
-    id: 'licensing',
-    titleKey: 'features.items.licensing.title',
-    descriptionKey: 'features.items.licensing.description',
-    icon: ShieldCheck,
+    id: 'shortDrama',
+    titleKey: 'about.cases.items.shortDrama.title',
+    descriptionKey: 'about.cases.items.shortDrama.description',
+    noteKey: 'about.cases.items.shortDrama.note',
+    metrics: [
+      { labelKey: 'about.cases.items.shortDrama.metrics.0.label', valueKey: 'about.cases.items.shortDrama.metrics.0.value' },
+      { labelKey: 'about.cases.items.shortDrama.metrics.1.label', valueKey: 'about.cases.items.shortDrama.metrics.1.value' },
+    ],
+    icon: Clapperboard,
+  },
+  {
+    id: 'ads',
+    titleKey: 'about.cases.items.ads.title',
+    descriptionKey: 'about.cases.items.ads.description',
+    noteKey: 'about.cases.items.ads.note',
+    metrics: [
+      { labelKey: 'about.cases.items.ads.metrics.0.label', valueKey: 'about.cases.items.ads.metrics.0.value' },
+      { labelKey: 'about.cases.items.ads.metrics.1.label', valueKey: 'about.cases.items.ads.metrics.1.value' },
+    ],
+    icon: Megaphone,
+  },
+  {
+    id: 'ecommerce',
+    titleKey: 'about.cases.items.ecommerce.title',
+    descriptionKey: 'about.cases.items.ecommerce.description',
+    noteKey: 'about.cases.items.ecommerce.note',
+    metrics: [
+      { labelKey: 'about.cases.items.ecommerce.metrics.0.label', valueKey: 'about.cases.items.ecommerce.metrics.0.value' },
+      { labelKey: 'about.cases.items.ecommerce.metrics.1.label', valueKey: 'about.cases.items.ecommerce.metrics.1.value' },
+    ],
+    icon: ShoppingBag,
   },
 ] as const
 
-const features = computed(() =>
-  featureData.map((item) => ({
+const commercialCases = computed(() =>
+  commercialCaseData.map((item) => ({
     id: item.id,
     title: t(item.titleKey),
     description: t(item.descriptionKey),
+    note: t(item.noteKey),
+    metrics: item.metrics.map((metric) => ({
+      label: t(metric.labelKey),
+      value: t(metric.valueKey),
+    })),
     icon: item.icon,
   })),
 )
 
-const workflowData = [
-  { id: 'describe', titleKey: 'workflow.steps.describe.title', descriptionKey: 'workflow.steps.describe.description' },
-  { id: 'generate', titleKey: 'workflow.steps.generate.title', descriptionKey: 'workflow.steps.generate.description' },
-  { id: 'export', titleKey: 'workflow.steps.export.title', descriptionKey: 'workflow.steps.export.description' },
+const awardData = [
+  { id: 'award-1', titleKey: 'about.awards.items.0.title', subtitleKey: 'about.awards.items.0.subtitle', image: '' },
+  { id: 'award-2', titleKey: 'about.awards.items.1.title', subtitleKey: 'about.awards.items.1.subtitle', image: '' },
+  { id: 'award-3', titleKey: 'about.awards.items.2.title', subtitleKey: 'about.awards.items.2.subtitle', image: '' },
+  { id: 'award-4', titleKey: 'about.awards.items.3.title', subtitleKey: 'about.awards.items.3.subtitle', image: '' },
+  { id: 'award-5', titleKey: 'about.awards.items.4.title', subtitleKey: 'about.awards.items.4.subtitle', image: '' },
+  { id: 'award-6', titleKey: 'about.awards.items.5.title', subtitleKey: 'about.awards.items.5.subtitle', image: '' },
 ] as const
 
-const workflow = computed(() =>
-  workflowData.map((step) => ({
-    id: step.id,
-    title: t(step.titleKey),
-    description: t(step.descriptionKey),
-  })),
-)
-
-const scenarioData = [
-  { id: 'shortVideo', titleKey: 'scenarios.items.shortVideo.title', descriptionKey: 'scenarios.items.shortVideo.description', icon: Play },
-  { id: 'game', titleKey: 'scenarios.items.game.title', descriptionKey: 'scenarios.items.game.description', icon: Headphones },
-  { id: 'ads', titleKey: 'scenarios.items.ads.title', descriptionKey: 'scenarios.items.ads.description', icon: Music },
-  { id: 'podcast', titleKey: 'scenarios.items.podcast.title', descriptionKey: 'scenarios.items.podcast.description', icon: AudioLines },
-  { id: 'library', titleKey: 'scenarios.items.library.title', descriptionKey: 'scenarios.items.library.description', icon: Layers },
-  { id: 'delivery', titleKey: 'scenarios.items.delivery.title', descriptionKey: 'scenarios.items.delivery.description', icon: Download },
-] as const
-
-const scenarios = computed(() =>
-  scenarioData.map((item) => ({
+const awards = computed(() =>
+  awardData.map((item) => ({
     id: item.id,
     title: t(item.titleKey),
-    description: t(item.descriptionKey),
-    icon: item.icon,
+    subtitle: t(item.subtitleKey),
+    image: item.image,
   })),
 )
 
-const faqData = [
-  { id: 'commercial', qKey: 'faq.items.commercial.q', aKey: 'faq.items.commercial.a' },
-  { id: 'exportFormats', qKey: 'faq.items.exportFormats.q', aKey: 'faq.items.exportFormats.a' },
-  { id: 'controlParams', qKey: 'faq.items.controlParams.q', aKey: 'faq.items.controlParams.a' },
-  { id: 'chinesePrompt', qKey: 'faq.items.chinesePrompt.q', aKey: 'faq.items.chinesePrompt.a' },
+const governmentBadgeKeys = [
+  'about.government.badges.0',
+  'about.government.badges.1',
+  'about.government.badges.2',
+  'about.government.badges.3',
 ] as const
 
-const faqs = computed(() =>
-  faqData.map((item) => ({
-    id: item.id,
-    q: t(item.qKey),
-    a: t(item.aKey),
-  })),
-)
+const governmentBadges = computed(() => governmentBadgeKeys.map((key) => t(key)))
+
+const partnerKeys = [
+  'about.partners.items.0',
+  'about.partners.items.1',
+  'about.partners.items.2',
+  'about.partners.items.3',
+  'about.partners.items.4',
+  'about.partners.items.5',
+] as const
+
+const partners = computed(() => partnerKeys.map((key) => ({ name: t(key) })))
+
 </script>
 
 <style scoped>
+.templates-stage__bg {
+  background:
+    radial-gradient(900px circle at 18% 8%, var(--tpl-glow-1), transparent 60%),
+    radial-gradient(800px circle at 82% 12%, var(--tpl-glow-2), transparent 58%),
+    radial-gradient(700px circle at 55% 100%, var(--tpl-glow-3), transparent 55%);
+  transition: background 650ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
 .badge {
   @apply inline-flex items-center rounded-full border border-slate-200 bg-white/70 px-3 py-1 text-xs text-slate-600 dark:border-slate-800 dark:bg-slate-900/60 dark:text-slate-300;
 }

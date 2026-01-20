@@ -71,6 +71,8 @@ export default defineNuxtConfig({
       ogImage: process.env.NUXT_PUBLIC_OG_IMAGE || '/og-image.svg',
       appUrl: process.env.NUXT_PUBLIC_APP_URL || '#cta',
       contactEmail: process.env.NUXT_PUBLIC_CONTACT_EMAIL || '',
+      contactWeChat: process.env.NUXT_PUBLIC_CONTACT_WECHAT || '',
+      contactWeChatQr: process.env.NUXT_PUBLIC_CONTACT_WECHAT_QR || '',
       theme: {
         accentPrimary: process.env.NUXT_PUBLIC_ACCENT_PRIMARY || '#6366f1',
         accentSecondary: process.env.NUXT_PUBLIC_ACCENT_SECONDARY || '#a855f7',
