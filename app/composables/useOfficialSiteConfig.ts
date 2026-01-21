@@ -13,6 +13,9 @@ export const useOfficialSiteConfig = () => {
   const contactWeChat = computed(() => (config.public.contactWeChat as string) || '')
   const contactWeChatQr = computed(() => (config.public.contactWeChatQr as string) || '')
 
+  const icpBeian = computed(() => (config.public.icpBeian as string) || '')
+  const icpBeianLink = computed(() => (config.public.icpBeianLink as string) || 'https://beian.miit.gov.cn/')
+
   return {
     siteName,
     siteUrl,
@@ -23,5 +26,7 @@ export const useOfficialSiteConfig = () => {
     contactEmail,
     contactWeChat,
     contactWeChatQr,
+    icpBeian,
+    icpBeianLink,
   }
 }

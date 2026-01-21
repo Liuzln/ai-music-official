@@ -73,6 +73,8 @@ export default defineNuxtConfig({
       contactEmail: process.env.NUXT_PUBLIC_CONTACT_EMAIL || '',
       contactWeChat: process.env.NUXT_PUBLIC_CONTACT_WECHAT || '',
       contactWeChatQr: process.env.NUXT_PUBLIC_CONTACT_WECHAT_QR || '',
+      icpBeian: process.env.NUXT_PUBLIC_ICP_BEIAN || '京ICP备2025015759号',
+      icpBeianLink: process.env.NUXT_PUBLIC_ICP_BEIAN_LINK || 'https://beian.miit.gov.cn/',
       theme: {
         accentPrimary: process.env.NUXT_PUBLIC_ACCENT_PRIMARY || '#6366f1',
         accentSecondary: process.env.NUXT_PUBLIC_ACCENT_SECONDARY || '#a855f7',

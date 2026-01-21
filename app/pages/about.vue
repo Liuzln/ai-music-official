@@ -170,5 +170,11 @@ const partnerKeys = [
   'about.partners.items.5',
 ] as const
 
-const partners = computed(() => partnerKeys.map((key) => ({ name: t(key) })))
+const partners = computed(() =>
+  partnerKeys.map((key, index) => ({
+    id: key,
+    name: t(key),
+    tier: index < 2 ? 'core' : 'standard',
+  })),
+)
 </script>

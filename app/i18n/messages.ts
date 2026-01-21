@@ -30,26 +30,31 @@ export const messages = {
       business: '商务合作',
     },
     hero: {
-      tag: 'AI 生成音乐 · 单页官网',
-      title: '用一句话生成你的音乐灵感',
+      tag: '统一音频生成引擎 · AudioX',
+      title: '新一代全能音频大脑',
       subtitle:
-        '{siteName} 面向内容创作者与音乐制作人：输入提示词，选择风格与情绪，即可生成可用于视频、游戏、广告的音乐草稿，并支持导出与二次编辑。',
+        '{siteName} 基于海量高标数据训练的统一音频生成引擎 AudioX：在一个会话内完成语音复刻、预制声线与多场景音频生成，并提供低延迟 API。',
       badges: {
-        textToMusic: '文本生成音乐',
-        styleControl: '风格/速度控制',
-        stemsExport: '分轨导出',
-        multiVersion: '快速迭代多版本',
+        textToMusic: '高保真语音复刻',
+        styleControl: '一句话语音复刻',
+        stemsExport: '高品质预制声线',
+        multiVersion: '流式接口 <500ms',
       },
-      disclaimer: '* 页面为展示用单页官网模板，功能与授权以实际产品为准。',
+      disclaimer: '* 效果受录音环境与素材影响，交付周期与授权以实际协议为准。',
     },
     preview: {
-      title: '生成预览',
-      prompt: '提示词：Lo-fi / 雨夜 / 温暖 / 90 BPM',
-      style: '风格',
-      duration: '时长',
-      export: '导出',
+      title: '试试看！',
+      prompt: '输入：欢迎来到我的直播间…（品牌美妆带货）',
+      style: '场景',
+      duration: '情绪',
+      export: '格式',
       listen: '试听',
       demo: '示意 UI',
+      values: {
+        scene: 'AI 直播带货',
+        emotion: '热情 / 亲和',
+        format: 'WAV / MP3',
+      },
     },
     sections: {
       templates: {
@@ -66,7 +71,8 @@ export const messages = {
       },
       about: {
         title: '关于我们',
-        description: '我们专注于 AI 音乐与配音的工程化落地：用模板、模型与工具链，让内容团队更快产出、更稳交付。',
+        description:
+          '我们专注于 AudioX 统一音频生成引擎与 IndexX Agent 平台：从高保真语音复刻、一句话克隆到预制声线与数字 IP 互动，让声音生产更高效、更可控、更安全。',
       },
       contact: {
         title: '联系我们',
@@ -112,6 +118,7 @@ export const messages = {
         label: '微信',
         placeholder: '（待填写）',
         qrAlt: '微信二维码',
+        noQr: '暂无二维码',
         qrPlaceholder: '后续可放二维码图片',
       },
       email: {
@@ -255,35 +262,44 @@ export const messages = {
       },
     },
     about: {
+      nav: {
+        ariaLabel: '关于页面导航',
+        intro: '介绍',
+        awardsPartners: '荣誉与合作',
+      },
+      contact: {
+        title: '联系我们',
+      },
       cases: {
-        title: '商业化案例',
-        description: '以下为脱敏示例，可根据实际客户/行业替换为真实案例与数据。',
+        title: '能力与场景',
+        description: '高保真语音复刻、一句话语音克隆与预制声线等能力，可按业务场景组合落地。',
         items: {
           shortDrama: {
-            title: '出海短剧团队：模板化配乐 + 多语种配音',
-            description: '为短剧切片与正片提供可控情绪曲线与卡点 BGM，同时支持配音底与混音交付。',
-            note: '核心价值：节奏点一致、版本对比快、素材迭代更省人力。',
+            title: '高保真语音复刻',
+            description:
+              '与真人无异的语音复刻，准确还原口音、语气、情感，适用于数字人、新闻播报、视频/短视频、客服、游戏语音、有声书、智能硬件等。',
+            note: '仅需 5 分钟手机录音即可制作，3 个工作日内交付；多重身份核验与全流程加密，模型独立分发。',
             metrics: {
-              0: { label: '交付周期', value: '24-48h' },
-              1: { label: '日均产出', value: '30+ 版本' },
+              0: { label: '录音时长', value: '≈ 5 分钟' },
+              1: { label: '交付周期', value: '3 个工作日' },
             },
           },
           ads: {
-            title: '品牌投放：广告模板 + A/B 多版本',
-            description: '根据不同卖点与投放渠道生成多风格 BGM，支持口播友好编配。',
-            note: '核心价值：提案更快、风格更可控、投放素材更新更及时。',
+            title: '一句话语音复刻',
+            description: '只需 1 秒参考语音即可完成克隆，小成本快制作，适合概念验证与快速尝试多种声线。',
+            note: '秒级语音克隆速率，无需漫长等待，帮助项目即时完成概念验证。',
             metrics: {
-              0: { label: 'A/B 轮次', value: '每周 3-5 轮' },
-              1: { label: '素材适配', value: '多平台尺寸' },
+              0: { label: '参考语音', value: '1 秒' },
+              1: { label: '生成速率', value: '秒级' },
             },
           },
           ecommerce: {
-            title: '电商/直播：热词驱动的快速出片',
-            description: '结合热门风格与商品卖点，生成短促抓耳的节奏素材，支持批量生成。',
-            note: '核心价值：跟热点快、节奏更上头、覆盖更多商品场景。',
+            title: '高品质预制声线',
+            description: '丰富的预制声线覆盖直播、视频广告、有声书、数字人文娱、智能硬件、语音教学等场景，满足不同需求。',
+            note: '丰富的控制参数可精准控制语速、情感、语调；支持流式接口，响应时间小于 500ms。',
             metrics: {
-              0: { label: '峰值产出', value: '100+ 条/天' },
-              1: { label: '常用时长', value: '6-15s' },
+              0: { label: '响应延迟', value: '< 500ms' },
+              1: { label: '覆盖语言', value: '多语种' },
             },
           },
         },
@@ -292,6 +308,7 @@ export const messages = {
         title: '比赛与获奖',
         description: '后续可替换为实拍图片/证书，支持珊格（栅格）展示。',
         placeholder: '待添加图片',
+        noImage: '暂无图片',
         items: {
           0: { title: '创新创业大赛 · 决赛入围', subtitle: '（示例）2025' },
           1: { title: '人工智能应用大赛 · 优胜奖', subtitle: '（示例）2024' },
@@ -313,24 +330,25 @@ export const messages = {
       },
       partners: {
         title: '合作伙伴',
-        description: '面向内容团队、出海品牌、制作公司与平台方合作共创。',
+        description: '面向数字人、内容制作、客服/游戏与智能硬件等团队合作共创。',
         items: {
-          0: '短剧出海团队',
-          1: '电商品牌',
-          2: '广告代理与制作公司',
-          3: '游戏发行与运营',
-          4: 'MCN / 内容机构',
-          5: '高校 / 研究机构',
+          0: '数字人 / 虚拟人团队',
+          1: '视频 / 短视频制作团队',
+          2: '客服 / 呼叫中心',
+          3: '游戏与互动娱乐',
+          4: '有声书 / 内容平台',
+          5: '智能硬件与 IoT',
         },
       },
     },
     meta: {
-      title: '{siteName} - AI 生成音乐，一键创作',
-      description: '{siteName}：AI 生成音乐单页官网示例，展示文本生成音乐、风格控制、导出与二次编辑等能力。',
-      keywords: 'AI生成音乐,AI音乐,音乐生成,文本生成音乐,配乐,BGM',
-      ogTitle: '{siteName} - AI 生成音乐',
-      twitterTitle: '{siteName} - AI 生成音乐',
-      schemaName: '{siteName} - AI 生成音乐',
+      title: '{siteName} - AudioX 统一音频生成引擎',
+      description:
+        '{siteName}：基于海量高标数据训练的统一音频生成引擎 AudioX，提供高保真语音复刻、一句话语音克隆、高品质预制声线与低延迟 API。',
+      keywords: 'AudioX,音频大模型,音频生成,语音复刻,声音克隆,一句话克隆,TTS,预制声线,数字人,低延迟API',
+      ogTitle: '{siteName} - AudioX 音频大模型',
+      twitterTitle: '{siteName} - AudioX 音频大模型',
+      schemaName: '{siteName} - AudioX 音频大模型',
     },
     features: {
       items: {
@@ -454,26 +472,31 @@ export const messages = {
       business: 'Business',
     },
     hero: {
-      tag: 'AI music generation · Landing page',
-      title: 'Turn one sentence into music inspiration',
+      tag: 'Unified audio generation · AudioX',
+      title: 'The next-gen all-in-one audio brain',
       subtitle:
-        '{siteName} is built for creators and producers: type a prompt, pick a style and mood, and generate music drafts for videos, games, and ads—with export and post-editing support.',
+        '{siteName} runs on AudioX, a unified audio generation engine trained on high-quality data—covering high-fidelity voice cloning, 1-second instant cloning, prebuilt voices, and low-latency APIs.',
       badges: {
-        textToMusic: 'Text-to-music',
-        styleControl: 'Style / tempo control',
-        stemsExport: 'Stems export',
-        multiVersion: 'Multi-version iteration',
+        textToMusic: 'High-fidelity cloning',
+        styleControl: '1-second cloning',
+        stemsExport: 'Prebuilt voices',
+        multiVersion: 'Streaming API <500ms',
       },
-      disclaimer: '* Demo landing page template. Features and licensing follow the actual product.',
+      disclaimer: '* Results depend on your recordings. Delivery timelines and licensing follow the actual agreement.',
     },
     preview: {
-      title: 'Generation preview',
-      prompt: 'Prompt: Lo-fi / Rainy night / Cozy / 90 BPM',
-      style: 'Style',
-      duration: 'Duration',
-      export: 'Export',
+      title: 'Try it',
+      prompt: 'Input: Welcome to my livestream… (beauty products)',
+      style: 'Scene',
+      duration: 'Emotion',
+      export: 'Format',
       listen: 'Listen',
       demo: 'Demo UI',
+      values: {
+        scene: 'Livestream sales',
+        emotion: 'Energetic / Friendly',
+        format: 'WAV / MP3',
+      },
     },
     sections: {
       templates: {
@@ -490,7 +513,8 @@ export const messages = {
       },
       about: {
         title: 'About us',
-        description: 'We productize AI music and dubbing with templates, models, and tooling—helping teams ship faster and deliver reliably.',
+        description:
+          'We build AudioX and the IndexX Agent platform—from high-fidelity voice cloning and 1-second cloning to prebuilt voices and interactive voice IP, making voice production faster, more controllable, and more secure.',
       },
       contact: {
         title: 'Contact',
@@ -537,6 +561,7 @@ export const messages = {
         label: 'WeChat',
         placeholder: '(TBD)',
         qrAlt: 'WeChat QR code',
+        noQr: 'No QR',
         qrPlaceholder: 'Add a QR image later',
       },
       email: {
@@ -680,35 +705,45 @@ export const messages = {
       },
     },
     about: {
+      nav: {
+        ariaLabel: 'About page navigation',
+        intro: 'Intro',
+        awardsPartners: 'Awards & partners',
+      },
+      contact: {
+        title: 'GET IN TOUCH',
+      },
       cases: {
-        title: 'Commercial cases',
-        description: 'Anonymized examples—replace with real customers and metrics when ready.',
+        title: 'Capabilities & use cases',
+        description: 'Combine high-fidelity cloning, instant cloning, and prebuilt voices to match your business scenario.',
         items: {
           shortDrama: {
-            title: 'Overseas short dramas: template scoring + multilingual dubbing',
-            description: 'Controlled emotion curves and cut-friendly BGMs, with dubbing beds and mix-ready delivery.',
-            note: 'Value: consistent beat points, faster comparisons, and lower iteration cost.',
+            title: 'High-fidelity voice cloning',
+            description:
+              'Near-human voice replicas with accent, tone, and emotion—built for digital humans, broadcasting, short videos, customer service, games, audiobooks, and smart devices.',
+            note: 'Made from ~5 minutes of mobile recording, delivered in 3 business days; identity checks and end-to-end encryption with isolated model delivery.',
             metrics: {
-              0: { label: 'Turnaround', value: '24–48h' },
-              1: { label: 'Daily output', value: '30+ versions' },
+              0: { label: 'Recording time', value: '~5 min' },
+              1: { label: 'Delivery', value: '3 business days' },
             },
           },
           ads: {
-            title: 'Performance marketing: ad templates + A/B multi-versions',
-            description: 'Multi-style BGMs for different angles and channels, optimized for voice-over creatives.',
-            note: 'Value: faster pitches, more controllable styles, and timely creative refresh.',
+            title: '1-second voice cloning',
+            description: 'Clone from a 1-second reference—low-cost, fast to iterate, great for prototyping and exploring multiple voices.',
+            note: 'Instant turnaround at seconds-level speed, without long waits.',
             metrics: {
-              0: { label: 'A/B cycles', value: '3–5 / week' },
-              1: { label: 'Adaptation', value: 'Multi-platform sizes' },
+              0: { label: 'Reference audio', value: '1s' },
+              1: { label: 'Speed', value: 'Seconds' },
             },
           },
           ecommerce: {
-            title: 'E-commerce & livestream: trend-driven fast production',
-            description: 'Short, catchy rhythm assets driven by hot styles and product highlights—batch generation ready.',
-            note: 'Value: faster trend response, punchier rhythm, broader SKU coverage.',
+            title: 'High-quality prebuilt voices',
+            description:
+              'A rich library of prebuilt voices for livestreaming, ads, audiobooks, entertainment, smart hardware, and voice training.',
+            note: 'Fine-grained control over pace, emotion, and pitch; streaming APIs with <500ms response time.',
             metrics: {
-              0: { label: 'Peak output', value: '100+ / day' },
-              1: { label: 'Common length', value: '6–15s' },
+              0: { label: 'Latency', value: '<500ms' },
+              1: { label: 'Languages', value: 'Multiple' },
             },
           },
         },
@@ -717,6 +752,7 @@ export const messages = {
         title: 'Competitions & awards',
         description: 'Replace with photos/certificates later. Responsive mosaic grid included.',
         placeholder: 'Add image later',
+        noImage: 'No image',
         items: {
           0: { title: 'Startup competition · Finalist', subtitle: '(Example) 2025' },
           1: { title: 'AI application contest · Winner', subtitle: '(Example) 2024' },
@@ -738,25 +774,25 @@ export const messages = {
       },
       partners: {
         title: 'Partners',
-        description: 'We collaborate with content teams, overseas brands, studios, and platforms.',
+        description: 'We collaborate with digital human studios, content teams, customer service, gaming, and smart devices.',
         items: {
-          0: 'Overseas drama teams',
-          1: 'E-commerce brands',
-          2: 'Agencies & studios',
-          3: 'Game publishing & ops',
-          4: 'Creator networks',
-          5: 'Universities & labs',
+          0: 'Digital humans / avatars',
+          1: 'Video & short-form content',
+          2: 'Customer service & call centers',
+          3: 'Games & interactive entertainment',
+          4: 'Audiobooks & content platforms',
+          5: 'Smart devices & IoT',
         },
       },
     },
     meta: {
-      title: '{siteName} - AI music generation, create instantly',
+      title: '{siteName} - AudioX unified audio generation',
       description:
-        '{siteName}: An AI music generation landing page demo showcasing text-to-music, style control, export, and post-editing.',
-      keywords: 'AI music,AI music generator,text to music,music generation,soundtrack,BGM',
-      ogTitle: '{siteName} - AI music generation',
-      twitterTitle: '{siteName} - AI music generation',
-      schemaName: '{siteName} - AI music generation',
+        '{siteName}: AudioX is a unified audio generation engine trained on high-quality data—offering high-fidelity voice cloning, 1-second instant cloning, prebuilt voices, and low-latency APIs.',
+      keywords: 'AudioX,audio generation,audio foundation model,voice cloning,TTS,prebuilt voices,digital human,low-latency API',
+      ogTitle: '{siteName} - AudioX audio foundation model',
+      twitterTitle: '{siteName} - AudioX audio foundation model',
+      schemaName: '{siteName} - AudioX audio foundation model',
     },
     features: {
       items: {
