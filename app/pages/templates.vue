@@ -51,53 +51,53 @@
         </button>
       </div>
 
-      <div ref="detailsCardEl" v-motion :initial="cardInitial" :visibleOnce="cardVisibleOnce(2)" class="glass-card overflow-hidden p-6">
-        <div class="flex flex-wrap items-start justify-between gap-3">
-          <div>
-            <div class="text-xs font-semibold text-indigo-600 dark:text-indigo-400">
-              {{ t('sections.templates.current') }}
-            </div>
-            <div data-tpl="title" class="mt-1 text-lg font-semibold tracking-tight text-slate-900 dark:text-slate-100">
-              {{ activeTemplate.title }}
-            </div>
+    <div v-if="activeTemplate" ref="detailsCardEl" v-motion :initial="cardInitial" :visibleOnce="cardVisibleOnce(2)" class="glass-card overflow-hidden p-6">
+      <div class="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <div class="text-xs font-semibold text-indigo-600 dark:text-indigo-400">
+            {{ t('sections.templates.current') }}
           </div>
-
-          <button
-            type="button"
-            class="inline-flex items-center gap-2 rounded-xl border border-slate-200/70 bg-white/70 px-3 py-2 text-xs font-semibold text-slate-700 shadow-sm transition-colors hover:bg-white dark:border-slate-800/70 dark:bg-slate-950/60 dark:text-slate-200 dark:hover:bg-slate-950"
-            :aria-pressed="bgmEnabled"
-            @click="toggleBgm"
-          >
-            <Headphones class="h-4 w-4" />
-            {{ bgmToggleText }}
-          </button>
-        </div>
-
-        <p data-tpl="long" class="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
-          {{ activeTemplate.longDescription }}
-        </p>
-
-        <div class="mt-5 grid gap-3 sm:grid-cols-2">
-          <div
-            v-for="point in activeTemplate.points"
-            :key="point"
-            data-tpl="point"
-            class="rounded-2xl bg-white/60 p-4 text-sm text-slate-700 dark:bg-slate-900/50 dark:text-slate-200"
-          >
-            {{ point }}
+          <div data-tpl="title" class="mt-1 text-lg font-semibold tracking-tight text-slate-900 dark:text-slate-100">
+            {{ activeTemplate?.title }}
           </div>
         </div>
 
-        <div class="mt-5 flex flex-wrap gap-2">
-          <span v-for="tag in activeTemplate.tags" :key="tag" data-tpl="tag" class="badge">
-            {{ tag }}
-          </span>
-        </div>
-
-        <p class="mt-4 text-xs text-slate-500 dark:text-slate-400">
-          {{ t('sections.templates.bgmHint') }}
-        </p>
+        <button
+          type="button"
+          class="inline-flex items-center gap-2 rounded-xl border border-slate-200/70 bg-white/70 px-3 py-2 text-xs font-semibold text-slate-700 shadow-sm transition-colors hover:bg-white dark:border-slate-800/70 dark:bg-slate-950/60 dark:text-slate-200 dark:hover:bg-slate-950"
+          :aria-pressed="bgmEnabled"
+          @click="toggleBgm"
+        >
+          <Headphones class="h-4 w-4" />
+          {{ bgmToggleText }}
+        </button>
       </div>
+
+      <p data-tpl="long" class="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
+        {{ activeTemplate?.longDescription }}
+      </p>
+
+      <div class="mt-5 grid gap-3 sm:grid-cols-2">
+        <div
+          v-for="point in activeTemplate?.points || []"
+          :key="point"
+          data-tpl="point"
+          class="rounded-2xl bg-white/60 p-4 text-sm text-slate-700 dark:bg-slate-900/50 dark:text-slate-200"
+        >
+          {{ point }}
+        </div>
+      </div>
+
+      <div class="mt-5 flex flex-wrap gap-2">
+        <span v-for="tag in activeTemplate?.tags || []" :key="tag" data-tpl="tag" class="badge">
+          {{ tag }}
+        </span>
+      </div>
+
+      <p class="mt-4 text-xs text-slate-500 dark:text-slate-400">
+        {{ t('sections.templates.bgmHint') }}
+      </p>
+    </div>
     </div>
   </section>
 </template>
@@ -147,8 +147,8 @@ const templateData = [
     icon: Layers,
     theme: {
       glow1: 'rgba(99, 102, 241, 0.20)',
-      glow2: 'rgba(59, 130, 246, 0.18)',
-      glow3: 'rgba(56, 189, 248, 0.15)',
+      glow2: 'rgba(99, 102, 241, 0.18)',
+      glow3: 'rgba(99, 102, 241, 0.15)',
     },
   },
   {
@@ -276,7 +276,7 @@ const templates = computed<TemplateViewModel[]>(() =>
 )
 
 const activeTemplateId = ref<TemplateId>(templateData[0].id)
-const activeTemplate = computed(() => templates.value.find((item) => item.id === activeTemplateId.value) ?? templates.value[0])
+const activeTemplate = computed(() => templates.value.find((item) => item.id === activeTemplateId.value) || templates.value[0])
 
 const selectedTemplateId = ref<TemplateId>(activeTemplateId.value)
 
@@ -547,7 +547,7 @@ const scheduleBgmNote = (preset: BgmPreset, time: number, hz: number, seconds: n
 const scheduleBgm = () => {
   if (!bgmAudioContext) return
 
-  const preset = bgmPresets[activeTemplate.value.bgmPreset]
+  const preset = activeTemplate.value?.bgmPreset ? bgmPresets[activeTemplate.value.bgmPreset] : bgmPresets.lofi
   const stepSeconds = (60 / preset.tempo) / 2
   const lookAhead = 0.35
 
@@ -596,7 +596,7 @@ const startBgm = async () => {
 
   bgmNextTime = bgmAudioContext.currentTime + 0.05
   bgmStep = 0
-  applyBgmPreset(bgmPresets[activeTemplate.value.bgmPreset])
+  applyBgmPreset(bgmPresets[activeTemplate.value?.bgmPreset || 'lofi'])
   startBgmScheduler()
 }
 
@@ -637,10 +637,8 @@ onBeforeUnmount(() => {
 
 <style scoped>
 .templates-stage__bg {
-  background:
-    radial-gradient(900px circle at 18% 8%, var(--tpl-glow-1), transparent 60%),
-    radial-gradient(800px circle at 82% 12%, var(--tpl-glow-2), transparent 58%),
-    radial-gradient(700px circle at 55% 100%, var(--tpl-glow-3), transparent 55%);
+  /* Removed radial-gradient background to eliminate the glow effect */
+  background: transparent;
   transition: background 650ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 </style>
