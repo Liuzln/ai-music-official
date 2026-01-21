@@ -1,110 +1,100 @@
 <template>
-  <section ref="stageEl" class="templates-stage relative mx-auto max-w-6xl overflow-hidden px-4 py-12 md:py-16" :style="stageVars">
-    <div class="templates-stage__bg pointer-events-none absolute inset-0 -z-10"></div>
+  <section ref="stageEl" class="templates-stage relative mx-auto flex h-[calc(100vh-64px)] w-full flex-col overflow-hidden px-4 md:px-8" :style="stageVars">
+    <!-- Dynamic Background -->
+    <div class="templates-stage__bg pointer-events-none absolute inset-0 -z-10 transition-colors duration-700"></div>
 
-    <div v-motion :initial="fadeUpInitial" :visibleOnce="fadeUpVisible(0)" class="max-w-2xl">
-      <h1 class="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100 md:text-3xl">
+    <!-- Header -->
+    <div v-motion :initial="fadeUpInitial" :visibleOnce="fadeUpVisible(0)" class="relative z-10 mx-auto mt-4 max-w-2xl flex-none text-center md:mt-8">
+      <h1 class="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100 md:text-3xl lg:text-4xl">
         {{ t('sections.templates.title') }}
       </h1>
-      <p class="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-300 md:text-base">
+      <p class="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-300 md:text-base lg:text-lg">
         {{ t('sections.templates.description') }}
       </p>
     </div>
 
-    <div class="mt-8 grid gap-6 lg:grid-cols-2">
-      <div class="grid gap-4 sm:grid-cols-2">
+    <!-- Carousel Container -->
+    <div class="relative z-10 flex flex-1 items-center justify-center perspective-1000">
+      <div class="relative flex h-full w-full max-w-6xl items-center justify-center">
         <button
           v-for="(item, idx) in templates"
           :key="item.id"
-          v-motion
-          :initial="cardInitial"
-          :visibleOnce="cardVisibleOnce(idx)"
-          :hovered="cardHovered"
           type="button"
-          class="glass-card group w-full p-6 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/60 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-50 dark:focus-visible:ring-offset-slate-950"
-          :class="selectedTemplateId === item.id ? 'ring-1 ring-indigo-500/30' : ''"
-          :aria-pressed="selectedTemplateId === item.id"
-          @click="switchTemplate(item.id)"
+          class="absolute left-1/2 top-1/2 h-[55vh] max-h-[500px] min-h-[350px] w-[min(85vw,340px)] -translate-x-1/2 -translate-y-1/2 rounded-3xl p-6 transition-all duration-500 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/60"
+          :class="[
+            'glass-card flex flex-col items-center justify-between border border-white/40 shadow-xl dark:border-white/10',
+            idx === activeIndex ? 'cursor-default ring-1 ring-indigo-500/30' : 'cursor-pointer hover:bg-white/40 dark:hover:bg-slate-800/40'
+          ]"
+          :style="getCardStyle(idx)"
+          @click="handleCardClick(idx)"
         >
-          <div class="flex items-start gap-3">
+          <!-- Card Content -->
+          <div class="flex w-full flex-col items-center text-center">
             <span
-              class="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-slate-900 text-white transition-transform duration-300 group-hover:rotate-3 group-hover:scale-110 dark:bg-slate-800"
+              class="mb-4 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-slate-800 to-slate-900 text-white shadow-lg transition-transform duration-300 dark:from-slate-700 dark:to-slate-800 md:h-16 md:w-16 md:mb-6"
+              :class="{ 'scale-110 shadow-indigo-500/20': idx === activeIndex }"
             >
-              <component :is="item.icon" class="h-5 w-5" />
+              <component :is="item.icon" class="h-7 w-7 md:h-8 md:w-8" />
             </span>
-            <div class="min-w-0">
-              <div class="flex items-center gap-2">
-                <h2 class="text-sm font-semibold text-slate-900 dark:text-slate-100">
-                  {{ item.title }}
-                </h2>
-                <span
-                  class="inline-flex items-center rounded-full border border-slate-200 bg-white/70 px-2 py-0.5 text-[11px] font-medium text-slate-600 dark:border-slate-800 dark:bg-slate-900/60 dark:text-slate-300"
-                >
-                  {{ item.bgmLabel }}
-                </span>
+            
+            <h2 class="text-lg font-bold text-slate-900 dark:text-slate-100 md:text-xl">
+              {{ item.title }}
+            </h2>
+            
+            <span class="mt-2 inline-flex items-center rounded-full border border-slate-200 bg-white/50 px-3 py-1 text-[10px] font-medium text-slate-600 dark:border-slate-700 dark:bg-slate-900/50 dark:text-slate-300 md:text-xs">
+              {{ item.bgmLabel }}
+            </span>
+
+            <p class="mt-4 line-clamp-4 text-xs leading-relaxed text-slate-600 dark:text-slate-300 md:text-sm md:line-clamp-3">
+              {{ item.description }}
+            </p>
+          </div>
+
+          <!-- Actions / Details -->
+          <div class="w-full space-y-4">
+             <!-- Play Button (Only prominent on active) -->
+            <div 
+              class="flex justify-center transition-all duration-300"
+              :class="idx === activeIndex ? 'opacity-100 transform-none' : 'opacity-0 translate-y-4 pointer-events-none'"
+            >
+              <div
+                class="group relative inline-flex h-12 w-12 items-center justify-center rounded-full bg-indigo-600 text-white shadow-lg shadow-indigo-500/30 transition-all hover:scale-105 hover:bg-indigo-500 active:scale-95 md:h-14 md:w-14"
+                @click.stop="toggleBgm"
+              >
+                <span v-if="bgmEnabled && idx === activeIndex" class="absolute inset-0 animate-ping rounded-full bg-indigo-500 opacity-20"></span>
+                <component :is="bgmEnabled && idx === activeIndex ? Pause : Play" class="fill-current h-5 w-5 md:h-6 md:w-6 ml-0.5" />
               </div>
-              <p class="mt-1 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
-                {{ item.description }}
-              </p>
+            </div>
+
+            <div class="flex flex-wrap justify-center gap-2 opacity-80" v-if="idx === activeIndex">
+               <span v-for="tag in item.tags.slice(0, 2)" :key="tag" class="text-[10px] text-slate-500 uppercase tracking-wider font-semibold">
+                 #{{ tag }}
+               </span>
             </div>
           </div>
         </button>
       </div>
-
-    <div v-if="activeTemplate" ref="detailsCardEl" v-motion :initial="cardInitial" :visibleOnce="cardVisibleOnce(2)" class="glass-card overflow-hidden p-6">
-      <div class="flex flex-wrap items-start justify-between gap-3">
-        <div>
-          <div class="text-xs font-semibold text-indigo-600 dark:text-indigo-400">
-            {{ t('sections.templates.current') }}
-          </div>
-          <div data-tpl="title" class="mt-1 text-lg font-semibold tracking-tight text-slate-900 dark:text-slate-100">
-            {{ activeTemplate?.title }}
-          </div>
-        </div>
-
-        <button
-          type="button"
-          class="inline-flex items-center gap-2 rounded-xl border border-slate-200/70 bg-white/70 px-3 py-2 text-xs font-semibold text-slate-700 shadow-sm transition-colors hover:bg-white dark:border-slate-800/70 dark:bg-slate-950/60 dark:text-slate-200 dark:hover:bg-slate-950"
-          :aria-pressed="bgmEnabled"
-          @click="toggleBgm"
-        >
-          <Headphones class="h-4 w-4" />
-          {{ bgmToggleText }}
-        </button>
-      </div>
-
-      <p data-tpl="long" class="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
-        {{ activeTemplate?.longDescription }}
-      </p>
-
-      <div class="mt-5 grid gap-3 sm:grid-cols-2">
-        <div
-          v-for="point in activeTemplate?.points || []"
-          :key="point"
-          data-tpl="point"
-          class="rounded-2xl bg-white/60 p-4 text-sm text-slate-700 dark:bg-slate-900/50 dark:text-slate-200"
-        >
-          {{ point }}
-        </div>
-      </div>
-
-      <div class="mt-5 flex flex-wrap gap-2">
-        <span v-for="tag in activeTemplate?.tags || []" :key="tag" data-tpl="tag" class="badge">
-          {{ tag }}
-        </span>
-      </div>
-
-      <p class="mt-4 text-xs text-slate-500 dark:text-slate-400">
-        {{ t('sections.templates.bgmHint') }}
-      </p>
     </div>
+    
+    <!-- Navigation Dots -->
+    <div class="mb-6 flex flex-none justify-center gap-2 md:mb-8">
+      <button
+        v-for="(_, idx) in templates"
+        :key="idx"
+        type="button"
+        class="h-1.5 rounded-full transition-all duration-300 md:h-2"
+        :class="idx === activeIndex ? 'w-6 bg-indigo-600 md:w-8' : 'w-1.5 bg-slate-300 hover:bg-indigo-400 dark:bg-slate-700 md:w-2'"
+        @click="switchTemplateByIndex(idx)"
+        :aria-label="`Go to slide ${idx + 1}`"
+      />
     </div>
+
   </section>
 </template>
 
 <script setup lang="ts">
 import type { Component } from 'vue'
-import { AudioLines, Headphones, Layers, Play, Sparkles, Zap } from 'lucide-vue-next'
+import { AudioLines, Headphones, Layers, Play, Pause, Sparkles, Zap } from 'lucide-vue-next'
 import { useOfficialSiteConfig } from '../composables/useOfficialSiteConfig'
 
 const { t } = useI18n()
@@ -115,19 +105,7 @@ useBaseSeo({
   description: computed(() => t('sections.templates.description')),
 })
 
-const {
-  fadeUpInitial,
-  fadeUpVisible,
-  cardInitial,
-  cardVisibleOnce,
-  cardHovered,
-  staggerDelay,
-  microStaggerBase,
-  microStaggerStep,
-  microStaggerStepTight,
-  microPopInitial,
-  microPopVisibleOnce,
-} = useLandingMotion()
+const { fadeUpInitial, fadeUpVisible } = useLandingMotion()
 
 const templateData = [
   {
@@ -275,38 +253,95 @@ const templates = computed<TemplateViewModel[]>(() =>
   })),
 )
 
-const activeTemplateId = ref<TemplateId>(templateData[0].id)
-const activeTemplate = computed(() => templates.value.find((item) => item.id === activeTemplateId.value) || templates.value[0])
+// Carousel Logic
+const activeIndex = ref(0)
+const activeTemplate = computed(() => templates.value[activeIndex.value])
 
-const selectedTemplateId = ref<TemplateId>(activeTemplateId.value)
+// Styles for cards
+const getCardStyle = (index: number) => {
+  const offset = index - activeIndex.value
+  const absOffset = Math.abs(offset)
+  
+  // Basic calculations for the carousel
+  // Adjust these values to tweak the "3D" feel
+  const xSpacing = 260 // Pixels between cards
+  const scaleRatio = 0.85 // How much side cards shrink
+  const opacityRatio = 0.5 // Opacity of side cards
+  
+  const translateX = offset * xSpacing
+  const scale = Math.pow(scaleRatio, absOffset)
+  const opacity = absOffset === 0 ? 1 : Math.max(0.3, Math.pow(opacityRatio, absOffset))
+  const zIndex = 10 - absOffset
+  const blur = absOffset === 0 ? 0 : 2 * absOffset // Blur side cards
+  
+  // Hide cards that are too far away
+  const isVisible = absOffset <= 2
+  
+  return {
+    transform: `translate(-50%, -50%) translateX(${translateX}px) scale(${scale})`,
+    opacity: isVisible ? opacity : 0,
+    zIndex: zIndex,
+    filter: `blur(${blur}px)`,
+    pointerEvents: (isVisible ? 'auto' : 'none') as 'auto' | 'none',
+    visibility: isVisible ? 'visible' : 'hidden',
+  }
+}
 
+const handleCardClick = (index: number) => {
+  if (index === activeIndex.value) {
+    // If clicking active card, maybe toggle play? 
+    // Currently Play button handles this, but clicking card body could too.
+    return
+  }
+  switchTemplateByIndex(index)
+}
+
+const switchTemplateByIndex = (index: number) => {
+  activeIndex.value = index
+  // Update background colors
+  updateBackground(index)
+  // If BGM is playing, restart it with new preset? 
+  // User flow: "Background changes". 
+  // If BGM was ON, we should probably switch track.
+  if (bgmEnabled.value) {
+    startBgm() 
+  }
+}
+
+// Background & Theme Logic
 const stageEl = ref<HTMLElement | null>(null)
-const detailsCardEl = ref<HTMLElement | null>(null)
 const stageVars = ref<Record<string, string>>({
   '--tpl-glow-1': templateData[0].theme.glow1,
   '--tpl-glow-2': templateData[0].theme.glow2,
   '--tpl-glow-3': templateData[0].theme.glow3,
 })
 
-const prefersReducedMotion = ref(false)
-
-onMounted(() => {
-  prefersReducedMotion.value = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false
-})
-
-const getGlowVarsById = (id: TemplateId) => {
-  const theme = templateData.find((item) => item.id === id)?.theme
-  return {
-    '--tpl-glow-1': theme?.glow1 ?? 'rgba(99, 102, 241, 0.18)',
-    '--tpl-glow-2': theme?.glow2 ?? 'rgba(168, 85, 247, 0.14)',
-    '--tpl-glow-3': theme?.glow3 ?? 'rgba(56, 189, 248, 0.12)',
-  } as Record<string, string>
+const updateBackground = (index: number) => {
+  const theme = templates.value[index].theme
+  
+  // Use GSAP if available for smooth color transition, else just set it
+  // Reusing existing GSAP logic structure but simplified
+  loadGsap().then((gsap) => {
+     if (stageEl.value && gsap) {
+       gsap.to(stageEl.value, {
+         '--tpl-glow-1': theme.glow1,
+         '--tpl-glow-2': theme.glow2,
+         '--tpl-glow-3': theme.glow3,
+         duration: 0.8,
+         ease: 'power2.out'
+       })
+     } else {
+        stageVars.value = {
+          '--tpl-glow-1': theme.glow1,
+          '--tpl-glow-2': theme.glow2,
+          '--tpl-glow-3': theme.glow3,
+        }
+     }
+  })
 }
 
+// GSAP Loader
 let gsapApi: any | null = null
-let contentTimeline: any | null = null
-let switchNonce = 0
-
 const loadGsap = async () => {
   if (gsapApi) return gsapApi
   const mod = await import('gsap')
@@ -314,104 +349,7 @@ const loadGsap = async () => {
   return gsapApi
 }
 
-const getDetailsTargets = () => {
-  const card = detailsCardEl.value
-  if (!card) return null
-
-  const title = card.querySelector<HTMLElement>('[data-tpl="title"]')
-  const long = card.querySelector<HTMLElement>('[data-tpl="long"]')
-  const points = Array.from(card.querySelectorAll<HTMLElement>('[data-tpl="point"]'))
-  const tags = Array.from(card.querySelectorAll<HTMLElement>('[data-tpl="tag"]'))
-  const targets = [title, long, ...points, ...tags].filter((el): el is HTMLElement => Boolean(el))
-
-  return { title, long, points, tags, targets }
-}
-
-const switchTemplate = async (id: TemplateId) => {
-  if (id === selectedTemplateId.value) return
-  const nonce = ++switchNonce
-  selectedTemplateId.value = id
-
-  if (!import.meta.client || prefersReducedMotion.value) {
-    activeTemplateId.value = id
-    stageVars.value = getGlowVarsById(id)
-    return
-  }
-
-  const stage = stageEl.value
-  if (!stage) {
-    activeTemplateId.value = id
-    stageVars.value = getGlowVarsById(id)
-    return
-  }
-
-  const gsap = await loadGsap().catch(() => null)
-  if (!gsap) {
-    activeTemplateId.value = id
-    stageVars.value = getGlowVarsById(id)
-    return
-  }
-
-  if (contentTimeline) contentTimeline.kill()
-
-  gsap.killTweensOf(stage)
-  gsap.to(stage, {
-    ...getGlowVarsById(id),
-    duration: 0.65,
-    ease: 'power3.out',
-    overwrite: 'auto',
-  })
-
-  const before = getDetailsTargets()
-  if (!before) {
-    activeTemplateId.value = id
-    stageVars.value = getGlowVarsById(id)
-    return
-  }
-
-  contentTimeline = gsap.timeline({ defaults: { ease: 'power3.out' } })
-  contentTimeline.to(before.targets, {
-    opacity: 0,
-    y: -10,
-    duration: 0.18,
-    stagger: 0.012,
-    overwrite: 'auto',
-  })
-  await new Promise<void>((resolve) => {
-    contentTimeline?.eventCallback('onComplete', resolve)
-    contentTimeline?.eventCallback('onInterrupt', resolve)
-  })
-  if (nonce !== switchNonce) return
-
-  activeTemplateId.value = id
-  await nextTick()
-  if (nonce !== switchNonce) return
-
-  const after = getDetailsTargets()
-  if (!after) {
-    stageVars.value = getGlowVarsById(id)
-    return
-  }
-
-  gsap.set(after.targets, { opacity: 0, y: 10 })
-
-  contentTimeline = gsap.timeline({ defaults: { ease: 'power3.out' } })
-  contentTimeline.to(after.targets, {
-    opacity: 1,
-    y: 0,
-    duration: 0.26,
-    stagger: 0.016,
-    overwrite: 'auto',
-  })
-  await new Promise<void>((resolve) => {
-    contentTimeline?.eventCallback('onComplete', resolve)
-    contentTimeline?.eventCallback('onInterrupt', resolve)
-  })
-  if (nonce !== switchNonce) return
-
-  stageVars.value = getGlowVarsById(id)
-}
-
+// BGM Logic (Mostly preserved)
 type BgmPreset = {
   tempo: number
   rootHz: number
@@ -488,7 +426,6 @@ const bgmPresets = {
 } as const satisfies Record<string, BgmPreset>
 
 const bgmEnabled = ref(false)
-const bgmToggleText = computed(() => (bgmEnabled.value ? t('templates.bgm.toggleOff') : t('templates.bgm.toggleOn')))
 
 let bgmAudioContext: AudioContext | null = null
 let bgmMaster: GainNode | null = null
@@ -547,7 +484,8 @@ const scheduleBgmNote = (preset: BgmPreset, time: number, hz: number, seconds: n
 const scheduleBgm = () => {
   if (!bgmAudioContext) return
 
-  const preset = activeTemplate.value?.bgmPreset ? bgmPresets[activeTemplate.value.bgmPreset] : bgmPresets.lofi
+  const presetId = activeTemplate.value?.bgmPreset
+  const preset = presetId ? bgmPresets[presetId] : bgmPresets.lofi
   const stepSeconds = (60 / preset.tempo) / 2
   const lookAhead = 0.35
 
@@ -621,11 +559,6 @@ const toggleBgm = async () => {
   await startBgm()
 }
 
-watch(activeTemplateId, async () => {
-  if (!bgmEnabled.value) return
-  await startBgm()
-})
-
 onBeforeUnmount(() => {
   stopBgmScheduler()
   if (bgmAudioContext) void bgmAudioContext.close().catch(() => {})
@@ -637,8 +570,21 @@ onBeforeUnmount(() => {
 
 <style scoped>
 .templates-stage__bg {
-  /* Removed radial-gradient background to eliminate the glow effect */
-  background: transparent;
-  transition: background 650ms cubic-bezier(0.22, 1, 0.36, 1);
+  /* Dynamic Mesh Gradient using CSS Variables */
+  background: 
+    radial-gradient(at 0% 0%, var(--tpl-glow-1) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, var(--tpl-glow-2) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, var(--tpl-glow-3) 0px, transparent 50%),
+    radial-gradient(at 0% 100%, var(--tpl-glow-2) 0px, transparent 50%);
+  filter: blur(80px);
+  opacity: 0.6;
+}
+
+.glass-card {
+  @apply backdrop-blur-xl bg-white/70 dark:bg-slate-900/60;
+}
+
+.perspective-1000 {
+  perspective: 1000px;
 }
 </style>
