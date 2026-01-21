@@ -163,6 +163,7 @@
 
 <script setup lang="ts">
 import { Building2, Clapperboard, Handshake, Megaphone, ShoppingBag, Trophy } from 'lucide-vue-next'
+import { useOfficialSiteConfig } from '../composables/useOfficialSiteConfig'
 
 const { t } = useI18n()
 const { siteName } = useOfficialSiteConfig()

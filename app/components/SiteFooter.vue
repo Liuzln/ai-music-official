@@ -37,6 +37,7 @@
 
 <script setup lang="ts">
 import { Mail, QrCode } from 'lucide-vue-next'
+import { useOfficialSiteConfig } from '../composables/useOfficialSiteConfig'
 
 const { t } = useI18n()
 const { siteName, contactEmail, contactWeChat } = useOfficialSiteConfig()

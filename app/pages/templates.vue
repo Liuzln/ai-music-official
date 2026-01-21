@@ -1,5 +1,5 @@
 <template>
-  <section class="templates-stage relative mx-auto max-w-6xl overflow-hidden px-4 py-12 md:py-16" :style="templateStageStyle">
+  <section ref="stageEl" class="templates-stage relative mx-auto max-w-6xl overflow-hidden px-4 py-12 md:py-16" :style="stageVars">
     <div class="templates-stage__bg pointer-events-none absolute inset-0 -z-10"></div>
 
     <div v-motion :initial="fadeUpInitial" :visibleOnce="fadeUpVisible(0)" class="max-w-2xl">
@@ -22,9 +22,9 @@
           :hovered="cardHovered"
           type="button"
           class="glass-card group w-full p-6 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/60 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-50 dark:focus-visible:ring-offset-slate-950"
-          :class="activeTemplateId === item.id ? 'ring-1 ring-indigo-500/30' : ''"
-          :aria-pressed="activeTemplateId === item.id"
-          @click="setActiveTemplate(item.id)"
+          :class="selectedTemplateId === item.id ? 'ring-1 ring-indigo-500/30' : ''"
+          :aria-pressed="selectedTemplateId === item.id"
+          @click="switchTemplate(item.id)"
         >
           <div class="flex items-start gap-3">
             <span
@@ -51,13 +51,13 @@
         </button>
       </div>
 
-      <div v-motion :initial="cardInitial" :visibleOnce="cardVisibleOnce(2)" class="glass-card overflow-hidden p-6">
+      <div ref="detailsCardEl" v-motion :initial="cardInitial" :visibleOnce="cardVisibleOnce(2)" class="glass-card overflow-hidden p-6">
         <div class="flex flex-wrap items-start justify-between gap-3">
           <div>
             <div class="text-xs font-semibold text-indigo-600 dark:text-indigo-400">
               {{ t('sections.templates.current') }}
             </div>
-            <div class="mt-1 text-lg font-semibold tracking-tight text-slate-900 dark:text-slate-100">
+            <div data-tpl="title" class="mt-1 text-lg font-semibold tracking-tight text-slate-900 dark:text-slate-100">
               {{ activeTemplate.title }}
             </div>
           </div>
@@ -73,17 +73,15 @@
           </button>
         </div>
 
-        <p class="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
+        <p data-tpl="long" class="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
           {{ activeTemplate.longDescription }}
         </p>
 
         <div class="mt-5 grid gap-3 sm:grid-cols-2">
           <div
-            v-for="(point, pointIdx) in activeTemplate.points"
+            v-for="point in activeTemplate.points"
             :key="point"
-            v-motion
-            :initial="microPopInitial"
-            :visibleOnce="microPopVisibleOnce(staggerDelay(pointIdx, microStaggerBase, microStaggerStep))"
+            data-tpl="point"
             class="rounded-2xl bg-white/60 p-4 text-sm text-slate-700 dark:bg-slate-900/50 dark:text-slate-200"
           >
             {{ point }}
@@ -91,14 +89,7 @@
         </div>
 
         <div class="mt-5 flex flex-wrap gap-2">
-          <span
-            v-for="(tag, tagIdx) in activeTemplate.tags"
-            :key="tag"
-            v-motion
-            :initial="microPopInitial"
-            :visibleOnce="microPopVisibleOnce(staggerDelay(tagIdx, microStaggerBase, microStaggerStepTight))"
-            class="badge"
-          >
+          <span v-for="tag in activeTemplate.tags" :key="tag" data-tpl="tag" class="badge">
             {{ tag }}
           </span>
         </div>
@@ -114,6 +105,7 @@
 <script setup lang="ts">
 import type { Component } from 'vue'
 import { AudioLines, Headphones, Layers, Play, Sparkles, Zap } from 'lucide-vue-next'
+import { useOfficialSiteConfig } from '../composables/useOfficialSiteConfig'
 
 const { t } = useI18n()
 const { siteName } = useOfficialSiteConfig()
@@ -286,18 +278,139 @@ const templates = computed<TemplateViewModel[]>(() =>
 const activeTemplateId = ref<TemplateId>(templateData[0].id)
 const activeTemplate = computed(() => templates.value.find((item) => item.id === activeTemplateId.value) ?? templates.value[0])
 
-const setActiveTemplate = (id: TemplateId) => {
-  activeTemplateId.value = id
-}
+const selectedTemplateId = ref<TemplateId>(activeTemplateId.value)
 
-const templateStageStyle = computed(() => {
-  const theme = activeTemplate.value?.theme
+const stageEl = ref<HTMLElement | null>(null)
+const detailsCardEl = ref<HTMLElement | null>(null)
+const stageVars = ref<Record<string, string>>({
+  '--tpl-glow-1': templateData[0].theme.glow1,
+  '--tpl-glow-2': templateData[0].theme.glow2,
+  '--tpl-glow-3': templateData[0].theme.glow3,
+})
+
+const prefersReducedMotion = ref(false)
+
+onMounted(() => {
+  prefersReducedMotion.value = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false
+})
+
+const getGlowVarsById = (id: TemplateId) => {
+  const theme = templateData.find((item) => item.id === id)?.theme
   return {
     '--tpl-glow-1': theme?.glow1 ?? 'rgba(99, 102, 241, 0.18)',
     '--tpl-glow-2': theme?.glow2 ?? 'rgba(168, 85, 247, 0.14)',
     '--tpl-glow-3': theme?.glow3 ?? 'rgba(56, 189, 248, 0.12)',
   } as Record<string, string>
-})
+}
+
+let gsapApi: any | null = null
+let contentTimeline: any | null = null
+let switchNonce = 0
+
+const loadGsap = async () => {
+  if (gsapApi) return gsapApi
+  const mod = await import('gsap')
+  gsapApi = (mod as any).gsap ?? (mod as any).default ?? mod
+  return gsapApi
+}
+
+const getDetailsTargets = () => {
+  const card = detailsCardEl.value
+  if (!card) return null
+
+  const title = card.querySelector<HTMLElement>('[data-tpl="title"]')
+  const long = card.querySelector<HTMLElement>('[data-tpl="long"]')
+  const points = Array.from(card.querySelectorAll<HTMLElement>('[data-tpl="point"]'))
+  const tags = Array.from(card.querySelectorAll<HTMLElement>('[data-tpl="tag"]'))
+  const targets = [title, long, ...points, ...tags].filter((el): el is HTMLElement => Boolean(el))
+
+  return { title, long, points, tags, targets }
+}
+
+const switchTemplate = async (id: TemplateId) => {
+  if (id === selectedTemplateId.value) return
+  const nonce = ++switchNonce
+  selectedTemplateId.value = id
+
+  if (!import.meta.client || prefersReducedMotion.value) {
+    activeTemplateId.value = id
+    stageVars.value = getGlowVarsById(id)
+    return
+  }
+
+  const stage = stageEl.value
+  if (!stage) {
+    activeTemplateId.value = id
+    stageVars.value = getGlowVarsById(id)
+    return
+  }
+
+  const gsap = await loadGsap().catch(() => null)
+  if (!gsap) {
+    activeTemplateId.value = id
+    stageVars.value = getGlowVarsById(id)
+    return
+  }
+
+  if (contentTimeline) contentTimeline.kill()
+
+  gsap.killTweensOf(stage)
+  gsap.to(stage, {
+    ...getGlowVarsById(id),
+    duration: 0.65,
+    ease: 'power3.out',
+    overwrite: 'auto',
+  })
+
+  const before = getDetailsTargets()
+  if (!before) {
+    activeTemplateId.value = id
+    stageVars.value = getGlowVarsById(id)
+    return
+  }
+
+  contentTimeline = gsap.timeline({ defaults: { ease: 'power3.out' } })
+  contentTimeline.to(before.targets, {
+    opacity: 0,
+    y: -10,
+    duration: 0.18,
+    stagger: 0.012,
+    overwrite: 'auto',
+  })
+  await new Promise<void>((resolve) => {
+    contentTimeline?.eventCallback('onComplete', resolve)
+    contentTimeline?.eventCallback('onInterrupt', resolve)
+  })
+  if (nonce !== switchNonce) return
+
+  activeTemplateId.value = id
+  await nextTick()
+  if (nonce !== switchNonce) return
+
+  const after = getDetailsTargets()
+  if (!after) {
+    stageVars.value = getGlowVarsById(id)
+    return
+  }
+
+  gsap.set(after.targets, { opacity: 0, y: 10 })
+
+  contentTimeline = gsap.timeline({ defaults: { ease: 'power3.out' } })
+  contentTimeline.to(after.targets, {
+    opacity: 1,
+    y: 0,
+    duration: 0.26,
+    stagger: 0.016,
+    overwrite: 'auto',
+  })
+  await new Promise<void>((resolve) => {
+    contentTimeline?.eventCallback('onComplete', resolve)
+    contentTimeline?.eventCallback('onInterrupt', resolve)
+  })
+  if (nonce !== switchNonce) return
+
+  stageVars.value = getGlowVarsById(id)
+}
 
 type BgmPreset = {
   tempo: number

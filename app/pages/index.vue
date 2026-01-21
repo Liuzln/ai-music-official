@@ -136,6 +136,7 @@
 
 <script setup lang="ts">
 import { ArrowRight, AudioLines, Play, Sparkles } from 'lucide-vue-next'
+import { useOfficialSiteConfig } from '../composables/useOfficialSiteConfig'
 
 definePageMeta({ layout: 'home' })
 

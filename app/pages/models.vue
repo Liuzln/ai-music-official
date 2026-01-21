@@ -94,6 +94,7 @@
 
 <script setup lang="ts">
 import { AudioLines, Globe, Languages, Layers, SlidersHorizontal } from 'lucide-vue-next'
+import { useOfficialSiteConfig } from '../composables/useOfficialSiteConfig'
 
 const { t } = useI18n()
 const { siteName } = useOfficialSiteConfig()

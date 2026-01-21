@@ -91,6 +91,7 @@
 
 <script setup lang="ts">
 import { ArrowRight, Monitor, Moon, Sun, Music } from 'lucide-vue-next'
+import { useOfficialSiteConfig } from '../composables/useOfficialSiteConfig'
 
 const { locale, setLocale, t } = useI18n()
 const { siteName, appUrl, isExternalAppUrl, isHashAppUrl } = useOfficialSiteConfig()
