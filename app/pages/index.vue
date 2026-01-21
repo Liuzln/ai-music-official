@@ -54,11 +54,8 @@
       <div class="relative">
         <div v-motion :initial="cardInitial" :enter="cardEnter(0.12)" :hovered="cardHovered" class="tilt-wrapper">
           <div
-            ref="previewCardEl"
+            v-tilt
             class="glass-card preview-tilt overflow-hidden p-6"
-            @mouseenter="onPreviewCardMouseEnter"
-            @mousemove="onPreviewCardMouseMove"
-            @mouseleave="onPreviewCardMouseLeave"
           >
             <div class="flex items-center gap-3">
               <span class="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-indigo-600/10 dark:bg-indigo-400/10">
@@ -119,75 +116,4 @@ const { siteName } = useOfficialSiteConfig()
 useBaseSeo()
 
 const { fadeUpInitial, fadeUpEnter, cardInitial, cardEnter, cardHovered } = useLandingMotion()
-
-const previewCardEl = ref<HTMLElement | null>(null)
-const prefersReducedMotion = ref(false)
-let previewTiltFrame: number | null = null
-const previewTiltPointer = { x: 0, y: 0 }
-const previewTiltMaxDeg = 10
-
-onMounted(() => {
-  prefersReducedMotion.value = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false
-})
-
-const updatePreviewTilt = () => {
-  previewTiltFrame = null
-  const card = previewCardEl.value
-  if (!card) return
-
-  const rect = card.getBoundingClientRect()
-  const x = previewTiltPointer.x - rect.left
-  const y = previewTiltPointer.y - rect.top
-  const px = Math.min(1, Math.max(0, x / rect.width))
-  const py = Math.min(1, Math.max(0, y / rect.height))
-
-  const nx = (px - 0.5) * 2
-  const ny = (py - 0.5) * 2
-
-  card.style.setProperty('--tilt-rx', `${(-ny * previewTiltMaxDeg).toFixed(2)}deg`)
-  card.style.setProperty('--tilt-ry', `${(nx * previewTiltMaxDeg).toFixed(2)}deg`)
-}
-
-const schedulePreviewTilt = () => {
-  if (previewTiltFrame != null) return
-  previewTiltFrame = requestAnimationFrame(updatePreviewTilt)
-}
-
-const onPreviewCardMouseEnter = (event: MouseEvent) => {
-  if (prefersReducedMotion.value) return
-  const card = previewCardEl.value
-  if (!card) return
-
-  card.classList.add('is-tilting')
-  previewTiltPointer.x = event.clientX
-  previewTiltPointer.y = event.clientY
-  schedulePreviewTilt()
-}
-
-const onPreviewCardMouseMove = (event: MouseEvent) => {
-  if (prefersReducedMotion.value) return
-  previewTiltPointer.x = event.clientX
-  previewTiltPointer.y = event.clientY
-  schedulePreviewTilt()
-}
-
-const onPreviewCardMouseLeave = () => {
-  const card = previewCardEl.value
-  if (!card) return
-
-  card.classList.remove('is-tilting')
-  card.style.setProperty('--tilt-rx', '0deg')
-  card.style.setProperty('--tilt-ry', '0deg')
-
-  if (previewTiltFrame == null) return
-  cancelAnimationFrame(previewTiltFrame)
-  previewTiltFrame = null
-}
-
-onBeforeUnmount(() => {
-  if (previewTiltFrame != null) {
-    cancelAnimationFrame(previewTiltFrame)
-    previewTiltFrame = null
-  }
-})
 </script>

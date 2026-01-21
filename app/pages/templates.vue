@@ -1,8 +1,5 @@
 <template>
   <section ref="stageEl" class="templates-stage relative mx-auto flex h-[calc(100vh-64px)] w-full flex-col overflow-hidden px-4 md:px-8" :style="stageVars">
-    <!-- Dynamic Background -->
-    <div class="templates-stage__bg pointer-events-none absolute inset-0 -z-10 transition-colors duration-700"></div>
-
     <!-- Header -->
     <div v-motion :initial="fadeUpInitial" :visibleOnce="fadeUpVisible(0)" class="relative z-10 mx-auto mt-4 max-w-2xl flex-none text-center md:mt-8">
       <h1 class="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100 md:text-3xl lg:text-4xl">
@@ -16,63 +13,22 @@
     <!-- Carousel Container -->
     <div class="relative z-10 flex flex-1 items-center justify-center perspective-1000">
       <div class="relative flex h-full w-full max-w-6xl items-center justify-center">
-        <button
+        <LandingCarouselCard
           v-for="(item, idx) in templates"
           :key="item.id"
-          type="button"
-          class="absolute left-1/2 top-1/2 h-[55vh] max-h-[500px] min-h-[350px] w-[min(85vw,340px)] -translate-x-1/2 -translate-y-1/2 rounded-3xl p-6 transition-all duration-500 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/60"
-          :class="[
-            'glass-card flex flex-col items-center justify-between border border-white/40 shadow-xl dark:border-white/10',
-            idx === activeIndex ? 'cursor-default ring-1 ring-indigo-500/30' : 'cursor-pointer hover:bg-white/40 dark:hover:bg-slate-800/40'
-          ]"
-          :style="getCardStyle(idx)"
-          @click="handleCardClick(idx)"
-        >
-          <!-- Card Content -->
-          <div class="flex w-full flex-col items-center text-center">
-            <span
-              class="mb-4 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-slate-800 to-slate-900 text-white shadow-lg transition-transform duration-300 dark:from-slate-700 dark:to-slate-800 md:h-16 md:w-16 md:mb-6"
-              :class="{ 'scale-110 shadow-indigo-500/20': idx === activeIndex }"
-            >
-              <component :is="item.icon" class="h-7 w-7 md:h-8 md:w-8" />
-            </span>
-            
-            <h2 class="text-lg font-bold text-slate-900 dark:text-slate-100 md:text-xl">
-              {{ item.title }}
-            </h2>
-            
-            <span class="mt-2 inline-flex items-center rounded-full border border-slate-200 bg-white/50 px-3 py-1 text-[10px] font-medium text-slate-600 dark:border-slate-700 dark:bg-slate-900/50 dark:text-slate-300 md:text-xs">
-              {{ item.bgmLabel }}
-            </span>
-
-            <p class="mt-4 line-clamp-4 text-xs leading-relaxed text-slate-600 dark:text-slate-300 md:text-sm md:line-clamp-3">
-              {{ item.description }}
-            </p>
-          </div>
-
-          <!-- Actions / Details -->
-          <div class="w-full space-y-4">
-             <!-- Play Button (Only prominent on active) -->
-            <div 
-              class="flex justify-center transition-all duration-300"
-              :class="idx === activeIndex ? 'opacity-100 transform-none' : 'opacity-0 translate-y-4 pointer-events-none'"
-            >
-              <div
-                class="group relative inline-flex h-12 w-12 items-center justify-center rounded-full bg-indigo-600 text-white shadow-lg shadow-indigo-500/30 transition-all hover:scale-105 hover:bg-indigo-500 active:scale-95 md:h-14 md:w-14"
-                @click.stop="toggleBgm"
-              >
-                <span v-if="bgmEnabled && idx === activeIndex" class="absolute inset-0 animate-ping rounded-full bg-indigo-500 opacity-20"></span>
-                <component :is="bgmEnabled && idx === activeIndex ? Pause : Play" class="fill-current h-5 w-5 md:h-6 md:w-6 ml-0.5" />
-              </div>
-            </div>
-
-            <div class="flex flex-wrap justify-center gap-2 opacity-80" v-if="idx === activeIndex">
-               <span v-for="tag in item.tags.slice(0, 2)" :key="tag" class="text-[10px] text-slate-500 uppercase tracking-wider font-semibold">
-                 #{{ tag }}
-               </span>
-            </div>
-          </div>
-        </button>
+          :icon="item.icon"
+          :title="item.title"
+          :description="item.description"
+          :pill="item.bgmLabel"
+          :tags="item.tags"
+          tag-variant="hash"
+          :max-tags="2"
+          :active="idx === activeIndex"
+          :playing="bgmEnabled && idx === activeIndex"
+          :card-style="getCardStyle(idx)"
+          @select="switchTemplateByIndex(idx)"
+          @toggle-play="toggleBgm"
+        />
       </div>
     </div>
     
@@ -94,7 +50,7 @@
 
 <script setup lang="ts">
 import type { Component } from 'vue'
-import { AudioLines, Headphones, Layers, Play, Pause, Sparkles, Zap } from 'lucide-vue-next'
+import { AudioLines, Headphones, Layers, Play, Sparkles, Zap } from 'lucide-vue-next'
 import { useOfficialSiteConfig } from '../composables/useOfficialSiteConfig'
 
 const { t } = useI18n()
@@ -264,7 +220,7 @@ const getCardStyle = (index: number) => {
   
   // Basic calculations for the carousel
   // Adjust these values to tweak the "3D" feel
-  const xSpacing = 260 // Pixels between cards
+  const xSpacing = 320 // Pixels between cards
   const scaleRatio = 0.85 // How much side cards shrink
   const opacityRatio = 0.5 // Opacity of side cards
   
@@ -285,15 +241,6 @@ const getCardStyle = (index: number) => {
     pointerEvents: (isVisible ? 'auto' : 'none') as 'auto' | 'none',
     visibility: isVisible ? 'visible' : 'hidden',
   }
-}
-
-const handleCardClick = (index: number) => {
-  if (index === activeIndex.value) {
-    // If clicking active card, maybe toggle play? 
-    // Currently Play button handles this, but clicking card body could too.
-    return
-  }
-  switchTemplateByIndex(index)
 }
 
 const switchTemplateByIndex = (index: number) => {
@@ -567,24 +514,3 @@ onBeforeUnmount(() => {
   bgmFilter = null
 })
 </script>
-
-<style scoped>
-.templates-stage__bg {
-  /* Dynamic Mesh Gradient using CSS Variables */
-  background: 
-    radial-gradient(at 0% 0%, var(--tpl-glow-1) 0px, transparent 50%),
-    radial-gradient(at 100% 0%, var(--tpl-glow-2) 0px, transparent 50%),
-    radial-gradient(at 100% 100%, var(--tpl-glow-3) 0px, transparent 50%),
-    radial-gradient(at 0% 100%, var(--tpl-glow-2) 0px, transparent 50%);
-  filter: blur(80px);
-  opacity: 0.6;
-}
-
-.glass-card {
-  @apply backdrop-blur-xl bg-white/70 dark:bg-slate-900/60;
-}
-
-.perspective-1000 {
-  perspective: 1000px;
-}
-</style>
