@@ -1,15 +1,11 @@
 <template>
-  <section class="mx-auto max-w-6xl px-4 py-12 md:py-16">
-    <div v-motion :initial="fadeUpInitial" :visibleOnce="fadeUpVisible(0)" class="max-w-2xl">
-      <h1 class="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100 md:text-3xl">
-        {{ t('sections.about.title') }}
-      </h1>
-      <p class="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-300 md:text-base">
-        {{ t('sections.about.description') }}
-      </p>
-    </div>
-
-    <div class="mt-10">
+  <div>
+    <AboutAnimations 
+      :title="t('sections.about.title')"
+      :description="t('sections.about.description')"
+    />
+    <section class="mx-auto max-w-6xl px-4 py-12 md:py-16">
+      <div class="mt-10">
       <div v-motion :initial="fadeUpInitial" :visibleOnce="fadeUpVisible(0.04)" class="max-w-2xl">
         <h2 class="text-lg font-semibold tracking-tight text-slate-900 dark:text-slate-100">
           {{ t('about.cases.title') }}
@@ -248,7 +244,8 @@
         </p>
       </div>
     </div>
-  </section>
+    </section>
+  </div>
 </template>
 
 <script setup lang="ts">

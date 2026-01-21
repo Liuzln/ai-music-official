@@ -22,9 +22,9 @@ const pageTransition = {
     
     gsap.to(el, {
       opacity: 0,
-      y: -20,
-      filter: 'blur(8px)',
-      duration: 0.3,
+      y: -10,
+      filter: 'blur(4px)',
+      duration: 0.4,
       ease: 'power2.in',
       onComplete: done
     })
@@ -38,14 +38,14 @@ const pageTransition = {
     gsap.fromTo(el,
       {
         opacity: 0,
-        y: 20,
-        filter: 'blur(8px)'
+        y: 10,
+        filter: 'blur(4px)'
       },
       {
         opacity: 1,
         y: 0,
         filter: 'blur(0px)',
-        duration: 0.5,
+        duration: 0.6,
         ease: 'power3.out',
         clearProps: 'all',
         onComplete: done

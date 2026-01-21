@@ -111,7 +111,7 @@
 import { AudioLines, Play, Sparkles } from 'lucide-vue-next'
 import { useOfficialSiteConfig } from '../composables/useOfficialSiteConfig'
 
-definePageMeta({ layout: 'home' })
+definePageMeta({ layout: 'default' })
 
 const { t } = useI18n()
 const { siteName } = useOfficialSiteConfig()
