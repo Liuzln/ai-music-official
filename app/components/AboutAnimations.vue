@@ -1,5 +1,5 @@
 <template>
-  <div ref="wrapper" class="about-experience-wrapper relative w-full bg-slate-50 dark:bg-slate-900">
+  <div ref="wrapper" class="about-experience-wrapper relative w-full bg-slate-50 dark:bg-slate-900 -mt-[61px] pt-[61px]">
     <!-- Section 1: Hero / Parallax -->
     <section class="hero-section relative h-screen w-full overflow-hidden flex items-center justify-center" data-color="#FF8F3F">
       <!-- Layers for Parallax -->

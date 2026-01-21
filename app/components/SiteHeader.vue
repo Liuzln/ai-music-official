@@ -3,7 +3,7 @@
     v-motion
     :initial="headerInitial"
     :enter="headerEnter"
-    class="sticky top-0 z-50 border-b border-slate-200/70 bg-white/75 backdrop-blur dark:border-slate-800/70 dark:bg-slate-950/70"
+    class="sticky top-0 z-50 border-b border-white/10 bg-white/10 backdrop-blur-md dark:border-slate-800/10 dark:bg-slate-950/10"
   >
     <div class="mx-auto grid max-w-6xl grid-cols-3 items-center px-4 py-3">
       <nav class="hidden items-center gap-6 text-sm text-slate-600 dark:text-slate-300 md:flex" aria-label="Primary">

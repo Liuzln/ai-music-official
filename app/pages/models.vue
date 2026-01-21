@@ -262,7 +262,7 @@ const getCardStyle = (index: number) => {
     zIndex: zIndex,
     filter: `blur(${blur}px)`,
     pointerEvents: (isVisible ? 'auto' : 'none') as 'auto' | 'none',
-    visibility: isVisible ? 'visible' : 'hidden',
+    visibility: (isVisible ? 'visible' : 'hidden') as 'visible' | 'hidden',
   }
 }
 
@@ -283,9 +283,9 @@ const switchItemByIndex = (index: number) => {
 
 const stageEl = ref<HTMLElement | null>(null)
 const stageVars = ref<Record<string, string>>({
-  '--tpl-glow-1': localeModelData[0].theme.glow1,
-  '--tpl-glow-2': localeModelData[0].theme.glow2,
-  '--tpl-glow-3': localeModelData[0].theme.glow3,
+  '--tpl-glow-1': localeModelData[0]?.theme.glow1 ?? 'rgba(0,0,0,0)',
+  '--tpl-glow-2': localeModelData[0]?.theme.glow2 ?? 'rgba(0,0,0,0)',
+  '--tpl-glow-3': localeModelData[0]?.theme.glow3 ?? 'rgba(0,0,0,0)',
 })
 
 let gsapApi: any | null = null
@@ -441,7 +441,11 @@ const scheduleBgmNote = (preset: BgmPreset, time: number, hz: number, seconds: n
 const scheduleBgm = () => {
   if (!bgmAudioContext) return
   const presetId = activeItem.value?.bgmPreset
-  const preset = presetId ? bgmPresets[presetId] : bgmPresets.lofi
+  if (!presetId) return
+
+  const preset = bgmPresets[presetId]
+  if (!preset) return
+
   const stepSeconds = (60 / preset.tempo) / 2
   const lookAhead = 0.35
 
@@ -485,7 +489,11 @@ const startBgm = async () => {
   }
   bgmNextTime = bgmAudioContext.currentTime + 0.05
   bgmStep = 0
-  applyBgmPreset(bgmPresets[activeItem.value?.bgmPreset || 'lofi'])
+  const presetId = activeItem.value?.bgmPreset || 'lofi'
+  const preset = bgmPresets[presetId]
+  if (preset) {
+    applyBgmPreset(preset)
+  }
   startBgmScheduler()
 }
 
