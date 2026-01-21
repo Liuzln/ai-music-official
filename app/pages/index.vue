@@ -31,33 +31,6 @@
         </p>
 
         <div v-motion :initial="fadeUpInitial" :enter="fadeUpEnter(0.24)" class="mt-6 flex flex-col gap-3 sm:flex-row">
-          <a
-            v-if="isExternalAppUrl"
-            :href="appUrl"
-            class="btn-primary group inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {{ t('actions.tryNow') }}
-            <ArrowRight class="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" />
-          </a>
-          <a
-            v-else-if="isHashAppUrl"
-            :href="appUrl"
-            class="btn-primary group inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold"
-          >
-            {{ t('actions.tryNow') }}
-            <ArrowRight class="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" />
-          </a>
-          <NuxtLink
-            v-else
-            :to="appUrl"
-            class="btn-primary group inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold"
-          >
-            {{ t('actions.tryNow') }}
-            <ArrowRight class="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" />
-          </NuxtLink>
-
           <NuxtLink
             to="/templates"
             class="inline-flex items-center justify-center rounded-xl border border-slate-200 bg-white/80 px-5 py-3 text-sm font-semibold text-slate-800 shadow-sm transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-white hover:shadow-md dark:border-slate-700 dark:bg-slate-900/60 dark:text-slate-100 dark:hover:bg-slate-900/80"
@@ -135,13 +108,13 @@
 </template>
 
 <script setup lang="ts">
-import { ArrowRight, AudioLines, Play, Sparkles } from 'lucide-vue-next'
+import { AudioLines, Play, Sparkles } from 'lucide-vue-next'
 import { useOfficialSiteConfig } from '../composables/useOfficialSiteConfig'
 
 definePageMeta({ layout: 'home' })
 
 const { t } = useI18n()
-const { siteName, appUrl, isExternalAppUrl, isHashAppUrl } = useOfficialSiteConfig()
+const { siteName } = useOfficialSiteConfig()
 
 useBaseSeo()
 

@@ -19,8 +19,8 @@ export const messages = {
       },
     },
     nav: {
-      features: '场景模板',
-      workflow: '小语种模型',
+      features: '场景',
+      workflow: '小语种',
       scenarios: '关于我们',
       faq: '联系我们',
     },
@@ -443,8 +443,8 @@ export const messages = {
       },
     },
     nav: {
-      features: 'Templates',
-      workflow: 'Localized models',
+      features: 'Scenarios',
+      workflow: 'Minor languages',
       scenarios: 'About',
       faq: 'Contact',
     },

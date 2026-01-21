@@ -5,8 +5,13 @@
     :enter="headerEnter"
     class="sticky top-0 z-50 border-b border-slate-200/70 bg-white/75 backdrop-blur dark:border-slate-800/70 dark:bg-slate-950/70"
   >
-    <div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
-      <NuxtLink to="/" class="group flex items-center gap-2">
+    <div class="mx-auto grid max-w-6xl grid-cols-3 items-center px-4 py-3">
+      <nav class="hidden items-center gap-6 text-sm text-slate-600 dark:text-slate-300 md:flex" aria-label="Primary">
+        <NuxtLink class="hover:text-slate-900 dark:hover:text-slate-100" to="/templates">{{ t('nav.features') }}</NuxtLink>
+        <NuxtLink class="hover:text-slate-900 dark:hover:text-slate-100" to="/models">{{ t('nav.workflow') }}</NuxtLink>
+      </nav>
+
+      <NuxtLink to="/" class="group col-start-2 flex items-center justify-center gap-2 justify-self-center">
         <span
           class="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 to-fuchsia-500 text-white shadow-sm transition-transform duration-300 group-hover:rotate-2 group-hover:scale-105"
         >
@@ -15,86 +20,58 @@
         <span class="font-semibold tracking-tight">{{ siteName }}</span>
       </NuxtLink>
 
-      <nav class="hidden items-center gap-6 text-sm text-slate-600 dark:text-slate-300 md:flex">
-        <NuxtLink class="hover:text-slate-900 dark:hover:text-slate-100" to="/templates">{{ t('nav.features') }}</NuxtLink>
-        <NuxtLink class="hover:text-slate-900 dark:hover:text-slate-100" to="/models">{{ t('nav.workflow') }}</NuxtLink>
+      <nav class="col-start-3 flex items-center justify-end gap-2 text-sm text-slate-600 dark:text-slate-300" aria-label="Secondary">
         <NuxtLink class="hover:text-slate-900 dark:hover:text-slate-100" to="/about">{{ t('nav.scenarios') }}</NuxtLink>
-        <NuxtLink class="hover:text-slate-900 dark:hover:text-slate-100" to="/contact">{{ t('nav.faq') }}</NuxtLink>
       </nav>
-
-      <div class="flex items-center gap-2">
-        <button
-          type="button"
-          class="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200/70 bg-white/70 text-slate-700 shadow-sm transition-colors hover:bg-white dark:border-slate-800/70 dark:bg-slate-950/60 dark:text-slate-200 dark:hover:bg-slate-950"
-          :title="themeToggleTitle"
-          :aria-label="themeToggleTitle"
-          @click="onToggleThemeMode"
-        >
-          <component :is="themeToggleIcon" class="h-4 w-4" />
-        </button>
-
-        <div
-          class="inline-flex items-center rounded-xl border border-slate-200/70 bg-white/70 p-1 text-xs font-semibold text-slate-700 shadow-sm dark:border-slate-800/70 dark:bg-slate-950/60 dark:text-slate-200"
-          role="group"
-          :aria-label="t('language.switch')"
-        >
-          <button
-            type="button"
-            class="rounded-lg px-2 py-1 transition-colors duration-200 hover:text-slate-900 dark:hover:text-slate-100"
-            :class="locale === 'zh-CN' ? 'bg-slate-900 text-white hover:text-white dark:bg-slate-100 dark:text-slate-900 dark:hover:text-slate-900' : ''"
-            :aria-pressed="locale === 'zh-CN'"
-            @click="setLocale('zh-CN')"
-          >
-            {{ t('language.zh') }}
-          </button>
-          <button
-            type="button"
-            class="rounded-lg px-2 py-1 transition-colors duration-200 hover:text-slate-900 dark:hover:text-slate-100"
-            :class="locale === 'en' ? 'bg-slate-900 text-white hover:text-white dark:bg-slate-100 dark:text-slate-900 dark:hover:text-slate-900' : ''"
-            :aria-pressed="locale === 'en'"
-            @click="setLocale('en')"
-          >
-            {{ t('language.en') }}
-          </button>
-        </div>
-
-        <a
-          v-if="isExternalAppUrl"
-          :href="appUrl"
-          class="btn-primary group inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          {{ t('actions.tryNow') }}
-          <ArrowRight class="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" />
-        </a>
-        <a
-          v-else-if="isHashAppUrl"
-          :href="appUrl"
-          class="btn-primary group inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold"
-        >
-          {{ t('actions.tryNow') }}
-          <ArrowRight class="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" />
-        </a>
-        <NuxtLink
-          v-else
-          :to="appUrl"
-          class="btn-primary group inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold"
-        >
-          {{ t('actions.tryNow') }}
-          <ArrowRight class="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" />
-        </NuxtLink>
-      </div>
     </div>
   </header>
+
+  <div class="fixed bottom-4 left-4 z-50">
+    <button
+      type="button"
+      class="inline-flex h-10 w-10 items-center justify-center rounded-2xl border border-slate-200/70 bg-white/75 text-slate-700 shadow-md backdrop-blur transition-colors hover:bg-white dark:border-slate-800/70 dark:bg-slate-950/70 dark:text-slate-200 dark:hover:bg-slate-950"
+      :title="themeToggleTitle"
+      :aria-label="themeToggleTitle"
+      @click="onToggleThemeMode"
+    >
+      <component :is="themeToggleIcon" class="h-4 w-4" />
+    </button>
+  </div>
+
+  <div class="fixed bottom-4 right-4 z-50">
+    <div
+      class="inline-flex items-center rounded-2xl border border-slate-200/70 bg-white/75 p-1 text-xs font-semibold text-slate-700 shadow-md backdrop-blur dark:border-slate-800/70 dark:bg-slate-950/70 dark:text-slate-200"
+      role="group"
+      :aria-label="t('language.switch')"
+    >
+      <button
+        type="button"
+        class="rounded-xl px-2.5 py-1 transition-colors duration-200 hover:text-slate-900 dark:hover:text-slate-100"
+        :class="locale === 'zh-CN' ? 'bg-slate-900 text-white hover:text-white dark:bg-slate-100 dark:text-slate-900 dark:hover:text-slate-900' : ''"
+        :aria-pressed="locale === 'zh-CN'"
+        @click="setLocale('zh-CN')"
+      >
+        {{ t('language.zh') }}
+      </button>
+      <button
+        type="button"
+        class="rounded-xl px-2.5 py-1 transition-colors duration-200 hover:text-slate-900 dark:hover:text-slate-100"
+        :class="locale === 'en' ? 'bg-slate-900 text-white hover:text-white dark:bg-slate-100 dark:text-slate-900 dark:hover:text-slate-900' : ''"
+        :aria-pressed="locale === 'en'"
+        @click="setLocale('en')"
+      >
+        {{ t('language.en') }}
+      </button>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { ArrowRight, Monitor, Moon, Sun, Music } from 'lucide-vue-next'
+import { Monitor, Moon, Sun, Music } from 'lucide-vue-next'
 import { useOfficialSiteConfig } from '../composables/useOfficialSiteConfig'
 
 const { locale, setLocale, t } = useI18n()
-const { siteName, appUrl, isExternalAppUrl, isHashAppUrl } = useOfficialSiteConfig()
+const { siteName } = useOfficialSiteConfig()
 
 const { mode: themeMode, resolved: resolvedTheme, cycleMode } = useThemeMode()
 const themeToggleIcon = computed(() => {

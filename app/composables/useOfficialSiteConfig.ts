@@ -5,7 +5,7 @@ export const useOfficialSiteConfig = () => {
   const siteUrl = computed(() => (config.public.siteUrl as string) || 'http://localhost:3000')
   const ogImage = computed(() => (config.public.ogImage as string) || '/og-image.svg')
 
-  const rawAppUrl = computed(() => (config.public.appUrl as string) || '/contact')
+  const rawAppUrl = computed(() => (config.public.appUrl as string) || '/about#contact')
   const isExternalAppUrl = computed(() => /^https?:\/\//i.test(rawAppUrl.value))
   const isHashAppUrl = computed(() => rawAppUrl.value.startsWith('#'))
 

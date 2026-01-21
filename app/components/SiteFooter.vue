@@ -27,7 +27,7 @@
         <NuxtLink class="hover:text-slate-700 dark:hover:text-slate-200" to="/about">
           {{ t('sections.footerLinks.scenarios') }}
         </NuxtLink>
-        <NuxtLink class="hover:text-slate-700 dark:hover:text-slate-200" to="/contact">
+        <NuxtLink class="hover:text-slate-700 dark:hover:text-slate-200" to="/about#contact">
           {{ t('sections.footerLinks.faq') }}
         </NuxtLink>
       </div>

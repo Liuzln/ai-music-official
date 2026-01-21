@@ -146,9 +146,9 @@ const templateData = [
     bgmPreset: 'lofi',
     icon: Layers,
     theme: {
-      glow1: 'rgba(99, 102, 241, 0.24)',
-      glow2: 'rgba(168, 85, 247, 0.18)',
-      glow3: 'rgba(56, 189, 248, 0.12)',
+      glow1: 'rgba(99, 102, 241, 0.20)',
+      glow2: 'rgba(59, 130, 246, 0.18)',
+      glow3: 'rgba(56, 189, 248, 0.15)',
     },
   },
   {

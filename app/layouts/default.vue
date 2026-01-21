@@ -11,8 +11,5 @@
     <main id="top">
       <slot />
     </main>
-
-    <SiteFooter />
   </div>
 </template>
-
