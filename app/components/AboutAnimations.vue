@@ -1,5 +1,27 @@
 <template>
   <div ref="wrapper" class="about-experience-wrapper relative w-full bg-slate-50 dark:bg-slate-900 -mt-[61px] pt-[61px]">
+    <!-- Navigation Dots -->
+    <nav
+      class="fixed right-4 top-1/2 z-50 hidden -translate-y-1/2 flex-col items-center rounded-full border border-white/20 bg-white/10 px-1 py-2 shadow-lg backdrop-blur-md md:flex"
+      aria-label="About page navigation"
+    >
+      <button
+        v-for="(item, idx) in navItems"
+        :key="item.id"
+        type="button"
+        class="group p-2"
+        :aria-label="item.label"
+        :title="item.label"
+        :aria-current="idx === activeSectionIndex ? 'true' : 'false'"
+        @click="scrollToSection(idx)"
+      >
+        <span
+          class="block w-2 rounded-full transition-all duration-300"
+          :class="idx === activeSectionIndex ? 'h-8 bg-white' : 'h-2 bg-white/40 group-hover:bg-white/70'"
+        />
+      </button>
+    </nav>
+
     <!-- Section 1: Hero / Parallax -->
     <section class="hero-section relative h-screen w-full overflow-hidden flex items-center justify-center" data-color="#FF8F3F">
       <!-- Layers for Parallax -->
@@ -271,12 +293,82 @@ defineEmits<{
 
 const wrapper = ref<HTMLElement | null>(null)
 const cardsContainer = ref<HTMLElement | null>(null)
+const activeSectionIndex = ref(0)
 let ctx: gsap.Context
+
+const navItems = [
+  { id: 'hero', selector: '.hero-section', label: 'Intro' },
+  { id: 'cases', selector: '.team-section', label: 'Commercial Cases' },
+  { id: 'awards', selector: '.awards-section', label: 'Awards & Partners' },
+  { id: 'contact', selector: '.footer-section', label: 'Contact' },
+] as const
+
+const getHeaderOffset = () => {
+  if (!import.meta.client) return 0
+  const header = document.querySelector('header')
+  if (!(header instanceof HTMLElement)) return 0
+  return Math.ceil(header.getBoundingClientRect().height)
+}
+
+const scrollToSection = (index: number) => {
+  if (!import.meta.client) return
+  syncSectionElements()
+  const item = navItems[index]
+  if (!item) return
+
+  const el =
+    sectionElements.value[index] ??
+    ((wrapper.value?.querySelector(item.selector) as HTMLElement | null) ?? (document.querySelector(item.selector) as HTMLElement | null))
+  if (!el) return
+
+  const headerOffset = getHeaderOffset()
+  const targetTop = window.scrollY + el.getBoundingClientRect().top - headerOffset
+  window.scrollTo({ top: Math.max(0, targetTop), behavior: 'smooth' })
+  activeSectionIndex.value = index
+}
+
+const sectionElements = ref<(HTMLElement | null)[]>([])
+
+const syncSectionElements = () => {
+  if (!wrapper.value) return
+  sectionElements.value = navItems.map((item) => (wrapper.value?.querySelector(item.selector) as HTMLElement | null) ?? null)
+}
+
+let navUpdateRaf: number | null = null
+const scheduleActiveSectionIndexUpdate = () => {
+  if (!import.meta.client) return
+  if (navUpdateRaf != null) return
+
+  navUpdateRaf = window.requestAnimationFrame(() => {
+    navUpdateRaf = null
+    updateActiveSectionIndex()
+  })
+}
+
+const updateActiveSectionIndex = () => {
+  if (!import.meta.client) return
+  syncSectionElements()
+  const headerOffset = getHeaderOffset()
+  const centerLine = headerOffset + (window.innerHeight - headerOffset) * 0.5
+
+  let nextIndex = 0
+  sectionElements.value.forEach((el, index) => {
+    if (!el) return
+    const rect = el.getBoundingClientRect()
+    if (rect.top <= centerLine) nextIndex = index
+  })
+
+  activeSectionIndex.value = nextIndex
+}
 
 onMounted(async () => {
   // Wait for next tick to ensure DOM is fully rendered
   await nextTick()
   
+  syncSectionElements()
+  window.addEventListener('scroll', scheduleActiveSectionIndexUpdate, { passive: true })
+  window.addEventListener('resize', scheduleActiveSectionIndexUpdate, { passive: true })
+
   ctx = gsap.context(() => {
     // 0. Initial Reveal
     gsap.fromTo(".description-text", 
@@ -311,14 +403,18 @@ onMounted(async () => {
 
     // 2. Background Color Morphing
     const sections = gsap.utils.toArray('section[data-color]') as HTMLElement[]
-    sections.forEach((section) => {
+    sections.forEach((section, index) => {
       const color = section.getAttribute('data-color')
       ScrollTrigger.create({
         trigger: section,
         start: "top 50%",
         end: "bottom 50%",
-        onEnter: () => gsap.to(wrapper.value, { backgroundColor: color, duration: 0.5, overwrite: 'auto' }),
-        onEnterBack: () => gsap.to(wrapper.value, { backgroundColor: color, duration: 0.5, overwrite: 'auto' }),
+        onEnter: () => {
+          gsap.to(wrapper.value, { backgroundColor: color, duration: 0.5, overwrite: 'auto' })
+        },
+        onEnterBack: () => {
+          gsap.to(wrapper.value, { backgroundColor: color, duration: 0.5, overwrite: 'auto' })
+        },
       })
     })
     
@@ -326,6 +422,18 @@ onMounted(async () => {
     if (sections.length > 0) {
        gsap.set(wrapper.value, { backgroundColor: sections[0].getAttribute('data-color') })
     }
+
+    // Active Section Tracking (for navigation dots)
+    ScrollTrigger.create({
+      trigger: wrapper.value,
+      start: "top top",
+      end: "bottom bottom",
+      onUpdate: () => updateActiveSectionIndex(),
+      onRefresh: () => {
+        syncSectionElements()
+        updateActiveSectionIndex()
+      },
+    })
 
     // 3. Horizontal Scroll for Team Section
     if (cardsContainer.value) {
@@ -361,14 +469,30 @@ onMounted(async () => {
              toggleActions: "play none none reverse"
            },
            delay: i * 0.2
-         })
+       })
       })
     }
 
+    // Pinning modifies layout; refresh so later sections calculate correct start/end.
+    requestAnimationFrame(() => {
+      ScrollTrigger.refresh()
+      updateActiveSectionIndex()
+    })
+
   }, wrapper.value!)
+
+  updateActiveSectionIndex()
 })
 
 onBeforeUnmount(() => {
+  if (import.meta.client) {
+    window.removeEventListener('scroll', scheduleActiveSectionIndexUpdate)
+    window.removeEventListener('resize', scheduleActiveSectionIndexUpdate)
+    if (navUpdateRaf != null) {
+      window.cancelAnimationFrame(navUpdateRaf)
+      navUpdateRaf = null
+    }
+  }
   ctx?.revert()
 })
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <section ref="stageEl" class="models-stage relative mx-auto flex h-[calc(100vh-64px)] w-full flex-col overflow-hidden px-4 md:px-8" :style="stageVars">
+  <section class="models-stage relative mx-auto flex h-[calc(100vh-64px)] w-full flex-col overflow-hidden px-4 md:px-8">
     <!-- Header -->
     <div v-motion :initial="fadeUpInitial" :visibleOnce="fadeUpVisible(0)" class="relative z-10 mx-auto mt-4 max-w-2xl flex-none text-center md:mt-8">
       <h1 class="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100 md:text-3xl lg:text-4xl">
@@ -65,12 +65,6 @@ const { fadeUpInitial, fadeUpVisible } = useLandingMotion()
 
 // --- Data Definition ---
 
-type ItemTheme = {
-  glow1: string
-  glow2: string
-  glow3: string
-}
-
 type CarouselItemModel = {
   id: string
   title: string
@@ -78,7 +72,6 @@ type CarouselItemModel = {
   label?: string
   bullets: string[]
   icon: Component
-  theme: ItemTheme
   bgmPreset: 'lofi' | 'cinematic' | 'anime' | 'ads' | 'dub' // Reusing BGM presets for simplicity
 }
 
@@ -90,11 +83,6 @@ const localeModelData = [
     bulletKeys: ['models.items.thai.bullets.0', 'models.items.thai.bullets.1', 'models.items.thai.bullets.2'],
     icon: Languages,
     label: 'Language',
-    theme: {
-      glow1: 'rgba(99, 102, 241, 0.20)', // Indigo
-      glow2: 'rgba(168, 85, 247, 0.18)', // Purple
-      glow3: 'rgba(236, 72, 153, 0.15)', // Pink
-    },
     bgmPreset: 'lofi',
   },
   {
@@ -104,11 +92,6 @@ const localeModelData = [
     bulletKeys: ['models.items.khmer.bullets.0', 'models.items.khmer.bullets.1', 'models.items.khmer.bullets.2'],
     icon: AudioLines,
     label: 'Language',
-    theme: {
-      glow1: 'rgba(14, 165, 233, 0.18)', // Sky
-      glow2: 'rgba(59, 130, 246, 0.18)', // Blue
-      glow3: 'rgba(99, 102, 241, 0.14)', // Indigo
-    },
     bgmPreset: 'cinematic',
   },
 ] as const
@@ -119,11 +102,6 @@ const modelAdvantageData = [
     titleKey: 'models.advantages.corpus.title',
     descriptionKey: 'models.advantages.corpus.description',
     icon: Globe,
-    theme: {
-      glow1: 'rgba(16, 185, 129, 0.18)', // Emerald
-      glow2: 'rgba(20, 184, 166, 0.16)', // Teal
-      glow3: 'rgba(59, 130, 246, 0.12)', // Blue
-    },
     bgmPreset: 'ads',
   },
   {
@@ -131,11 +109,6 @@ const modelAdvantageData = [
     titleKey: 'models.advantages.control.title',
     descriptionKey: 'models.advantages.control.description',
     icon: SlidersHorizontal,
-    theme: {
-      glow1: 'rgba(245, 158, 11, 0.18)', // Amber
-      glow2: 'rgba(234, 179, 8, 0.16)', // Yellow
-      glow3: 'rgba(249, 115, 22, 0.12)', // Orange
-    },
     bgmPreset: 'anime',
   },
   {
@@ -143,11 +116,6 @@ const modelAdvantageData = [
     titleKey: 'models.advantages.voiceover.title',
     descriptionKey: 'models.advantages.voiceover.description',
     icon: AudioLines,
-    theme: {
-      glow1: 'rgba(244, 63, 94, 0.18)', // Rose
-      glow2: 'rgba(236, 72, 153, 0.16)', // Pink
-      glow3: 'rgba(168, 85, 247, 0.12)', // Purple
-    },
     bgmPreset: 'dub',
   },
   {
@@ -155,11 +123,6 @@ const modelAdvantageData = [
     titleKey: 'models.advantages.delivery.title',
     descriptionKey: 'models.advantages.delivery.description',
     icon: Layers,
-    theme: {
-      glow1: 'rgba(6, 182, 212, 0.18)', // Cyan
-      glow2: 'rgba(14, 165, 233, 0.16)', // Sky
-      glow3: 'rgba(99, 102, 241, 0.12)', // Indigo
-    },
     bgmPreset: 'lofi',
   },
 ] as const
@@ -172,7 +135,6 @@ const carouselItems = computed<CarouselItemModel[]>(() => {
     label: item.label,
     bullets: item.bulletKeys.map((key) => t(key)),
     icon: item.icon,
-    theme: item.theme,
     bgmPreset: item.bgmPreset as 'lofi' | 'cinematic',
   }))
 
@@ -183,7 +145,6 @@ const carouselItems = computed<CarouselItemModel[]>(() => {
     label: 'Feature',
     bullets: [],
     icon: item.icon,
-    theme: item.theme,
     bgmPreset: item.bgmPreset as 'ads' | 'anime' | 'dub' | 'lofi',
   }))
 
@@ -223,49 +184,9 @@ const getCardStyle = (index: number) => {
 
 const switchItemByIndex = (index: number) => {
   activeIndex.value = index
-  updateBackground(index)
   if (bgmEnabled.value) {
     startBgm() 
   }
-}
-
-// --- Background & Theme Logic ---
-
-const stageEl = ref<HTMLElement | null>(null)
-const stageVars = ref<Record<string, string>>({
-  '--tpl-glow-1': localeModelData[0]?.theme.glow1 ?? 'rgba(0,0,0,0)',
-  '--tpl-glow-2': localeModelData[0]?.theme.glow2 ?? 'rgba(0,0,0,0)',
-  '--tpl-glow-3': localeModelData[0]?.theme.glow3 ?? 'rgba(0,0,0,0)',
-})
-
-let gsapApi: any | null = null
-const loadGsap = async () => {
-  if (gsapApi) return gsapApi
-  const mod = await import('gsap')
-  gsapApi = (mod as any).gsap ?? (mod as any).default ?? mod
-  return gsapApi
-}
-
-const updateBackground = (index: number) => {
-  const theme = carouselItems.value[index].theme
-  
-  loadGsap().then((gsap) => {
-     if (stageEl.value && gsap) {
-       gsap.to(stageEl.value, {
-         '--tpl-glow-1': theme.glow1,
-         '--tpl-glow-2': theme.glow2,
-         '--tpl-glow-3': theme.glow3,
-         duration: 0.8,
-         ease: 'power2.out'
-       })
-     } else {
-        stageVars.value = {
-          '--tpl-glow-1': theme.glow1,
-          '--tpl-glow-2': theme.glow2,
-          '--tpl-glow-3': theme.glow3,
-        }
-     }
-  })
 }
 
 // --- BGM Logic (Copied from Templates) ---

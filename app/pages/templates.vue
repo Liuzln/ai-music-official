@@ -1,5 +1,5 @@
 <template>
-  <section ref="stageEl" class="templates-stage relative mx-auto flex h-[calc(100vh-64px)] w-full flex-col overflow-hidden px-4 md:px-8" :style="stageVars">
+  <section class="templates-stage relative mx-auto flex h-[calc(100vh-64px)] w-full flex-col overflow-hidden px-4 md:px-8">
     <!-- Header -->
     <div v-motion :initial="fadeUpInitial" :visibleOnce="fadeUpVisible(0)" class="relative z-10 mx-auto mt-4 max-w-2xl flex-none text-center md:mt-8">
       <h1 class="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100 md:text-3xl lg:text-4xl">
@@ -79,11 +79,6 @@ const templateData = [
     bgmLabelKey: 'templates.bgm.labels.lofi',
     bgmPreset: 'lofi',
     icon: Layers,
-    theme: {
-      glow1: 'rgba(99, 102, 241, 0.20)',
-      glow2: 'rgba(99, 102, 241, 0.18)',
-      glow3: 'rgba(99, 102, 241, 0.15)',
-    },
   },
   {
     id: 'shortDrama',
@@ -100,11 +95,6 @@ const templateData = [
     bgmLabelKey: 'templates.bgm.labels.cinematic',
     bgmPreset: 'cinematic',
     icon: Play,
-    theme: {
-      glow1: 'rgba(244, 63, 94, 0.18)',
-      glow2: 'rgba(99, 102, 241, 0.18)',
-      glow3: 'rgba(251, 146, 60, 0.14)',
-    },
   },
   {
     id: 'comic',
@@ -121,11 +111,6 @@ const templateData = [
     bgmLabelKey: 'templates.bgm.labels.anime',
     bgmPreset: 'anime',
     icon: Sparkles,
-    theme: {
-      glow1: 'rgba(34, 197, 94, 0.16)',
-      glow2: 'rgba(59, 130, 246, 0.18)',
-      glow3: 'rgba(236, 72, 153, 0.14)',
-    },
   },
   {
     id: 'ads',
@@ -142,11 +127,6 @@ const templateData = [
     bgmLabelKey: 'templates.bgm.labels.punchy',
     bgmPreset: 'ads',
     icon: Zap,
-    theme: {
-      glow1: 'rgba(245, 158, 11, 0.20)',
-      glow2: 'rgba(168, 85, 247, 0.16)',
-      glow3: 'rgba(99, 102, 241, 0.14)',
-    },
   },
   {
     id: 'dub',
@@ -163,21 +143,10 @@ const templateData = [
     bgmLabelKey: 'templates.bgm.labels.clean',
     bgmPreset: 'dub',
     icon: AudioLines,
-    theme: {
-      glow1: 'rgba(14, 165, 233, 0.18)',
-      glow2: 'rgba(99, 102, 241, 0.16)',
-      glow3: 'rgba(148, 163, 184, 0.12)',
-    },
   },
 ] as const
 
 type TemplateId = (typeof templateData)[number]['id']
-
-type TemplateTheme = {
-  glow1: string
-  glow2: string
-  glow3: string
-}
 
 type BgmPresetId = 'lofi' | 'cinematic' | 'anime' | 'ads' | 'dub'
 
@@ -191,7 +160,6 @@ type TemplateViewModel = {
   bgmLabel: string
   bgmPreset: BgmPresetId
   icon: Component
-  theme: TemplateTheme
 }
 
 const templates = computed<TemplateViewModel[]>(() =>
@@ -205,7 +173,6 @@ const templates = computed<TemplateViewModel[]>(() =>
     bgmLabel: t(item.bgmLabelKey),
     bgmPreset: item.bgmPreset,
     icon: item.icon,
-    theme: item.theme,
   })),
 )
 
@@ -245,55 +212,9 @@ const getCardStyle = (index: number) => {
 
 const switchTemplateByIndex = (index: number) => {
   activeIndex.value = index
-  // Update background colors
-  updateBackground(index)
-  // If BGM is playing, restart it with new preset? 
-  // User flow: "Background changes". 
-  // If BGM was ON, we should probably switch track.
   if (bgmEnabled.value) {
     startBgm() 
   }
-}
-
-// Background & Theme Logic
-const stageEl = ref<HTMLElement | null>(null)
-const stageVars = ref<Record<string, string>>({
-  '--tpl-glow-1': templateData[0].theme.glow1,
-  '--tpl-glow-2': templateData[0].theme.glow2,
-  '--tpl-glow-3': templateData[0].theme.glow3,
-})
-
-const updateBackground = (index: number) => {
-  const theme = templates.value[index].theme
-  
-  // Use GSAP if available for smooth color transition, else just set it
-  // Reusing existing GSAP logic structure but simplified
-  loadGsap().then((gsap) => {
-     if (stageEl.value && gsap) {
-       gsap.to(stageEl.value, {
-         '--tpl-glow-1': theme.glow1,
-         '--tpl-glow-2': theme.glow2,
-         '--tpl-glow-3': theme.glow3,
-         duration: 0.8,
-         ease: 'power2.out'
-       })
-     } else {
-        stageVars.value = {
-          '--tpl-glow-1': theme.glow1,
-          '--tpl-glow-2': theme.glow2,
-          '--tpl-glow-3': theme.glow3,
-        }
-     }
-  })
-}
-
-// GSAP Loader
-let gsapApi: any | null = null
-const loadGsap = async () => {
-  if (gsapApi) return gsapApi
-  const mod = await import('gsap')
-  gsapApi = (mod as any).gsap ?? (mod as any).default ?? mod
-  return gsapApi
 }
 
 // BGM Logic (Mostly preserved)
