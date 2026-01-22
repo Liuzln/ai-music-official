@@ -49,6 +49,8 @@ export const messages = {
       duration: '情绪',
       export: '格式',
       listen: '试听',
+      pause: '暂停',
+      waveform: '音频波形',
       demo: '示意 UI',
       values: {
         scene: 'AI 直播带货',
@@ -491,6 +493,8 @@ export const messages = {
       duration: 'Emotion',
       export: 'Format',
       listen: 'Listen',
+      pause: 'Pause',
+      waveform: 'Waveform',
       demo: 'Demo UI',
       values: {
         scene: 'Livestream sales',

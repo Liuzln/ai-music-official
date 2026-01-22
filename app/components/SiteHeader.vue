@@ -26,7 +26,7 @@
     </div>
   </header>
 
-  <div class="fixed bottom-4 left-4 z-50">
+  <div class="fixed bottom-[calc(1rem+var(--icp-beian-offset,0px))] left-4 z-50">
     <button
       type="button"
       class="inline-flex h-10 w-10 items-center justify-center rounded-2xl border border-slate-200/70 bg-white/75 text-slate-700 shadow-md backdrop-blur transition-colors hover:bg-white dark:border-slate-800/70 dark:bg-slate-950/70 dark:text-slate-200 dark:hover:bg-slate-950"
@@ -38,7 +38,7 @@
     </button>
   </div>
 
-  <div class="fixed bottom-4 right-4 z-50">
+  <div class="fixed bottom-[calc(1rem+var(--icp-beian-offset,0px))] right-4 z-50">
     <div
       class="inline-flex items-center rounded-2xl border border-slate-200/70 bg-white/75 p-1 text-xs font-semibold text-slate-700 shadow-md backdrop-blur dark:border-slate-800/70 dark:bg-slate-950/70 dark:text-slate-200"
       role="group"

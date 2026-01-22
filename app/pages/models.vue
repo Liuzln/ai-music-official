@@ -1,5 +1,5 @@
 <template>
-  <section class="models-stage relative mx-auto flex h-[calc(100vh-64px)] w-full flex-col overflow-hidden px-4 md:px-8">
+  <section class="models-stage relative mx-auto flex h-[calc(100vh-64px-var(--icp-beian-offset,0px))] w-full flex-col overflow-hidden px-4 md:px-8">
     <!-- Header -->
     <div v-motion :initial="fadeUpInitial" :visibleOnce="fadeUpVisible(0)" class="relative z-10 mx-auto mt-4 max-w-2xl flex-none text-center md:mt-8">
       <h1 class="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100 md:text-3xl lg:text-4xl">

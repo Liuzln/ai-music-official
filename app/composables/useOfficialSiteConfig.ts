@@ -15,6 +15,7 @@ export const useOfficialSiteConfig = () => {
 
   const icpBeian = computed(() => (config.public.icpBeian as string) || '')
   const icpBeianLink = computed(() => (config.public.icpBeianLink as string) || 'https://beian.miit.gov.cn/')
+  const previewAudioUrl = computed(() => (config.public.previewAudioUrl as string) || '')
 
   return {
     siteName,
@@ -28,5 +29,6 @@ export const useOfficialSiteConfig = () => {
     contactWeChatQr,
     icpBeian,
     icpBeianLink,
+    previewAudioUrl,
   }
 }

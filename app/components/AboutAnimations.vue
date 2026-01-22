@@ -55,7 +55,11 @@
     <!-- Section 2: Horizontal Scroll / Commercial Cases -->
     <section class="team-section relative h-screen w-full overflow-hidden flex flex-col justify-center" :data-color="sectionColors.cases">
       <div class="absolute top-10 left-4 md:top-20 md:left-20 z-10">
-        <h2 class="team-title text-4xl md:text-6xl font-black text-white tracking-tight uppercase opacity-0">{{ t('about.cases.title') }}</h2>
+        <h2
+          class="team-title text-4xl md:text-6xl font-black text-slate-900 dark:text-white tracking-tight uppercase opacity-0 drop-shadow-[0_10px_30px_rgba(0,0,0,0.12)] dark:drop-shadow-[0_12px_36px_rgba(0,0,0,0.45)]"
+        >
+          {{ t('about.cases.title') }}
+        </h2>
       </div>
       
       <div ref="cardsContainer" class="cards-container flex items-center gap-10 md:gap-20 px-10 md:px-20 w-fit h-full pt-20">
