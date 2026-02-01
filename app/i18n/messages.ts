@@ -19,10 +19,10 @@ export const messages = {
       },
     },
     nav: {
-      features: '场景',
-      workflow: '小语种',
-      scenarios: '关于我们',
-      faq: '联系我们',
+      templates: '场景',
+      models: '小语种',
+      about: '关于我们',
+      contact: '联系我们',
     },
     actions: {
       tryNow: '立即体验',
@@ -52,6 +52,7 @@ export const messages = {
       pause: '暂停',
       waveform: '音频波形',
       demo: '示意 UI',
+      langSwitch: '语言切换',
       values: {
         scene: 'AI 直播带货',
         emotion: '热情 / 亲和',
@@ -64,12 +65,14 @@ export const messages = {
         description: '面向不同内容场景，提供模板化结构与节奏点；切换卡片即可预览对应背景与示意 BGM。',
         current: '当前模板',
         bgmHint: '* BGM 为示意效果，需手动点击开启（浏览器可能限制自动播放）。',
+        createButton: '创建模版',
       },
       models: {
         title: '小语种特化模型',
         description: '面向泰语、柬埔寨语等小语种内容，提供更贴近本地语感的模板与音色/韵律优化。',
         advantagesTitle: '产品优势',
-        advantagesSubtitle: '把“可用”做到“好用”，更容易在商业化项目里交付。',
+        advantagesSubtitle: '把"可用"做到"好用"，更容易在商业化项目里交付。',
+        createButton: '了解更多',
       },
       about: {
         title: '关于我们',
@@ -103,10 +106,10 @@ export const messages = {
         description: '打开 {siteName}，用更少的时间完成更多版本，专注于选择、编排与情绪表达。',
       },
       footerLinks: {
-        features: '模板',
-        workflow: '小语种',
-        scenarios: '关于',
-        faq: '联系',
+        templates: '模板',
+        models: '小语种',
+        about: '关于',
+        contact: '联系',
       },
     },
     contact: {
@@ -307,10 +310,15 @@ export const messages = {
         },
       },
       awards: {
-        title: '比赛与获奖',
+        title: '比赛&获奖',
+        subtitle: 'COMPETITION & AWARD',
         description: '后续可替换为实拍图片/证书，支持珊格（栅格）展示。',
         placeholder: '待添加图片',
         noImage: '暂无图片',
+        lightbox: {
+          close: '关闭',
+          loading: '加载中...',
+        },
         items: {
           0: { title: '创新创业大赛 · 决赛入围', subtitle: '（示例）2025' },
           1: { title: '人工智能应用大赛 · 优胜奖', subtitle: '（示例）2024' },
@@ -463,10 +471,10 @@ export const messages = {
       },
     },
     nav: {
-      features: 'Scenarios',
-      workflow: 'Minor languages',
-      scenarios: 'About',
-      faq: 'Contact',
+      templates: 'Scenarios',
+      models: 'Minor languages',
+      about: 'About',
+      contact: 'Contact',
     },
     actions: {
       tryNow: 'Try now',
@@ -496,6 +504,7 @@ export const messages = {
       pause: 'Pause',
       waveform: 'Waveform',
       demo: 'Demo UI',
+      langSwitch: 'Language',
       values: {
         scene: 'Livestream sales',
         emotion: 'Energetic / Friendly',
@@ -508,12 +517,14 @@ export const messages = {
         description: 'Cards for different scenes. Switch templates to preview the background and a demo BGM.',
         current: 'Current template',
         bgmHint: '* Demo BGM for presentation only. Click to enable (autoplay restrictions may apply).',
+        createButton: 'Create template',
       },
       models: {
         title: 'Localized models',
         description: 'Specialized templates and rhythm optimization for low-resource languages such as Thai and Khmer.',
         advantagesTitle: 'Product advantages',
         advantagesSubtitle: 'Built for real production: stable, controllable, and easy to deliver at scale.',
+        createButton: 'Learn more',
       },
       about: {
         title: 'About us',
@@ -548,10 +559,10 @@ export const messages = {
         description: 'Open {siteName}, ship more versions in less time, and focus on selection, arrangement, and emotion.',
       },
       footerLinks: {
-        features: 'Templates',
-        workflow: 'Languages',
-        scenarios: 'About',
-        faq: 'Contact',
+        templates: 'Templates',
+        models: 'Languages',
+        about: 'About',
+        contact: 'Contact',
       },
     },
     contact: {

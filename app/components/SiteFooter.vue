@@ -19,16 +19,16 @@
 
       <div class="flex flex-wrap gap-x-5 gap-y-2 md:justify-end">
         <NuxtLink class="hover:text-slate-700 dark:hover:text-slate-200" to="/templates">
-          {{ t('sections.footerLinks.features') }}
+          {{ t('sections.footerLinks.templates') }}
         </NuxtLink>
         <NuxtLink class="hover:text-slate-700 dark:hover:text-slate-200" to="/models">
-          {{ t('sections.footerLinks.workflow') }}
+          {{ t('sections.footerLinks.models') }}
         </NuxtLink>
         <NuxtLink class="hover:text-slate-700 dark:hover:text-slate-200" to="/about">
-          {{ t('sections.footerLinks.scenarios') }}
+          {{ t('sections.footerLinks.about') }}
         </NuxtLink>
         <NuxtLink class="hover:text-slate-700 dark:hover:text-slate-200" to="/about#contact">
-          {{ t('sections.footerLinks.faq') }}
+          {{ t('sections.footerLinks.contact') }}
         </NuxtLink>
       </div>
     </div>

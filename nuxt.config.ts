@@ -76,6 +76,20 @@ export default defineNuxtConfig({
       icpBeian: process.env.NUXT_PUBLIC_ICP_BEIAN || '京ICP备2025015759号',
       icpBeianLink: process.env.NUXT_PUBLIC_ICP_BEIAN_LINK || 'https://beian.miit.gov.cn/',
       previewAudioUrl: process.env.NUXT_PUBLIC_PREVIEW_AUDIO_URL || '',
+      previewAudioTracks: [
+        {
+          lang: 'th',
+          label: 'ภาษาไทย',
+          flag: '🇹🇭',
+          audioUrl: process.env.NUXT_PUBLIC_PREVIEW_AUDIO_TH || '/audio/preview-th.mp3',
+        },
+        {
+          lang: 'km',
+          label: 'ភាសាខ្មែរ',
+          flag: '🇰🇭',
+          audioUrl: process.env.NUXT_PUBLIC_PREVIEW_AUDIO_KM || '/audio/preview-km.mp3',
+        },
+      ],
       theme: {
         accentPrimary: process.env.NUXT_PUBLIC_ACCENT_PRIMARY || '#6366f1',
         accentSecondary: process.env.NUXT_PUBLIC_ACCENT_SECONDARY || '#a855f7',

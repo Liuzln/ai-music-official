@@ -57,7 +57,23 @@
             v-tilt
             class="glass-card preview-tilt overflow-hidden p-6"
           >
+            <MultiLangAudioPlayer
+              v-if="hasMultiLangTracks"
+              :title="t('preview.title')"
+              :prompt="t('preview.prompt')"
+              :style-label="t('preview.style')"
+              :duration-label="t('preview.duration')"
+              :export-label="t('preview.export')"
+              :style-value="t('preview.values.scene')"
+              :duration-value="t('preview.values.emotion')"
+              :export-value="t('preview.values.format')"
+              :play-label="t('preview.listen')"
+              :pause-label="t('preview.pause')"
+              :waveform-label="t('preview.waveform')"
+              :tracks="previewAudioTracks"
+            />
             <AudioPreviewCard
+              v-else
               :title="t('preview.title')"
               :prompt="t('preview.prompt')"
               :style-label="t('preview.style')"
@@ -85,7 +101,9 @@ import { useOfficialSiteConfig } from '../composables/useOfficialSiteConfig'
 definePageMeta({ layout: 'default' })
 
 const { t } = useI18n()
-const { siteName, previewAudioUrl } = useOfficialSiteConfig()
+const { siteName, previewAudioUrl, previewAudioTracks } = useOfficialSiteConfig()
+
+const hasMultiLangTracks = computed(() => previewAudioTracks.value.length > 0)
 
 useBaseSeo()
 

@@ -38,18 +38,28 @@
           </div>
         </div>
 
-        <div class="mt-3 h-20 w-full">
-          <AudioWaveformCanvas
+        <div class="mt-3 w-full" :class="$slots.waveform ? '' : 'h-20'">
+          <slot
+            name="waveform"
             :analyser="analyser"
-            :active="isPlaying"
-            variant="bars"
-            :color="waveformColor"
-            :inactive-color="waveformInactiveColor"
-            :bar-width="3"
-            :bar-gap="4"
-            :line-width="2"
-            :dotted-baseline="true"
-          />
+            :is-playing="isPlaying"
+            :waveform-color="waveformColor"
+            :waveform-inactive-color="waveformInactiveColor"
+          >
+            <div class="h-20">
+              <AudioWaveformCanvas
+                :analyser="analyser"
+                :active="isPlaying"
+                variant="bars"
+                :color="waveformColor"
+                :inactive-color="waveformInactiveColor"
+                :bar-width="3"
+                :bar-gap="4"
+                :line-width="2"
+                :dotted-baseline="true"
+              />
+            </div>
+          </slot>
         </div>
 
         <button
@@ -118,6 +128,12 @@ const props = withDefaults(
     waveformDefaultColor: '#6ee7b7',
   },
 )
+
+const emit = defineEmits<{
+  'update:analyser': [AnalyserNode | null]
+  'update:isPlaying': [boolean]
+  'update:currentTime': [number]
+}>()
 
 const audioRef = ref<HTMLAudioElement | null>(null)
 const analyser = shallowRef<AnalyserNode | null>(null)
@@ -220,7 +236,17 @@ const ensureDemoSrc = () => {
   const setResolved = (next: string) => {
     resolvedSrc.value = next
     const audioEl = audioRef.value
-    if (audioEl && audioEl.src !== next) audioEl.src = next
+    if (!audioEl) return
+    // Compare using URL pathname to handle relative vs absolute URLs
+    try {
+      const currentUrl = new URL(audioEl.src, window.location.origin)
+      const nextUrl = new URL(next, window.location.origin)
+      if (currentUrl.pathname !== nextUrl.pathname) {
+        audioEl.src = next
+      }
+    } catch {
+      if (audioEl.src !== next) audioEl.src = next
+    }
   }
 
   if (props.src) {
@@ -277,18 +303,22 @@ const togglePlay = async () => {
 const attachAudioListeners = (audioEl: HTMLAudioElement) => {
   const onPlay = () => {
     isPlaying.value = true
+    emit('update:isPlaying', true)
   }
   const onPause = () => {
     isPlaying.value = false
+    emit('update:isPlaying', false)
   }
   const onTimeUpdate = () => {
     currentTime.value = audioEl.currentTime || 0
+    emit('update:currentTime', currentTime.value)
   }
   const onLoadedMeta = () => {
     duration.value = audioEl.duration || 0
   }
   const onEnded = () => {
     isPlaying.value = false
+    emit('update:isPlaying', false)
   }
 
   audioEl.addEventListener('play', onPlay)
@@ -327,6 +357,71 @@ watch(
     if (!demoUrl) ensureDemoSrc()
   },
 )
+
+watch(analyser, (val) => {
+  emit('update:analyser', val)
+})
+
+const switchAudio = async (newUrl: string) => {
+  const audioEl = audioRef.value
+  if (!audioEl) return
+
+  const wasPlaying = !audioEl.paused
+  const savedTime = audioEl.currentTime
+
+  audioEl.pause()
+  resolvedSrc.value = newUrl
+  audioEl.src = newUrl
+
+  await new Promise<void>((resolve) => {
+    const onCanPlay = () => {
+      audioEl.removeEventListener('canplay', onCanPlay)
+      resolve()
+    }
+    audioEl.addEventListener('canplay', onCanPlay)
+    audioEl.load()
+  })
+
+  audioEl.currentTime = Math.min(savedTime, audioEl.duration || savedTime)
+
+  if (wasPlaying) {
+    await ensureAudioGraph()
+    await audioEl.play()
+  }
+}
+
+const getCurrentTime = () => currentTime.value
+const getDuration = () => duration.value
+const getIsPlaying = () => isPlaying.value
+const getAnalyser = () => analyser.value
+
+const play = async () => {
+  const audioEl = audioRef.value
+  if (!audioEl) return
+  ensureDemoSrc()
+  await ensureAudioGraph()
+  await audioEl.play()
+}
+
+const pause = () => {
+  const audioEl = audioRef.value
+  if (!audioEl) return
+  audioEl.pause()
+}
+
+defineExpose({
+  switchAudio,
+  getCurrentTime,
+  getDuration,
+  getIsPlaying,
+  getAnalyser,
+  play,
+  pause,
+  analyser,
+  isPlaying,
+  currentTime,
+  duration,
+})
 
 onBeforeUnmount(() => {
   detachAudioListeners?.()

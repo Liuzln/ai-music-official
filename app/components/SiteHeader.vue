@@ -7,8 +7,8 @@
   >
     <div class="mx-auto grid max-w-6xl grid-cols-3 items-center px-4 py-3">
       <nav class="hidden items-center gap-6 text-sm text-slate-600 dark:text-slate-300 md:flex" aria-label="Primary">
-        <NuxtLink class="hover:text-slate-900 dark:hover:text-slate-100" to="/templates">{{ t('nav.features') }}</NuxtLink>
-        <NuxtLink class="hover:text-slate-900 dark:hover:text-slate-100" to="/models">{{ t('nav.workflow') }}</NuxtLink>
+        <NuxtLink class="hover:text-slate-900 dark:hover:text-slate-100" to="/templates">{{ t('nav.templates') }}</NuxtLink>
+        <NuxtLink class="hover:text-slate-900 dark:hover:text-slate-100" to="/models">{{ t('nav.models') }}</NuxtLink>
       </nav>
 
       <NuxtLink to="/" class="group col-start-2 flex items-center justify-center gap-2 justify-self-center">
@@ -21,7 +21,7 @@
       </NuxtLink>
 
       <nav class="col-start-3 flex items-center justify-end gap-2 text-sm text-slate-600 dark:text-slate-300" aria-label="Secondary">
-        <NuxtLink class="hover:text-slate-900 dark:hover:text-slate-100" to="/about">{{ t('nav.scenarios') }}</NuxtLink>
+        <NuxtLink class="hover:text-slate-900 dark:hover:text-slate-100" to="/about">{{ t('nav.about') }}</NuxtLink>
       </nav>
     </div>
   </header>

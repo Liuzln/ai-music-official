@@ -1,3 +1,10 @@
+export interface PreviewAudioTrack {
+  lang: string
+  label: string
+  flag?: string
+  audioUrl: string
+}
+
 export const useOfficialSiteConfig = () => {
   const config = useRuntimeConfig()
 
@@ -17,6 +24,14 @@ export const useOfficialSiteConfig = () => {
   const icpBeianLink = computed(() => (config.public.icpBeianLink as string) || 'https://beian.miit.gov.cn/')
   const previewAudioUrl = computed(() => (config.public.previewAudioUrl as string) || '')
 
+  const previewAudioTracks = computed<PreviewAudioTrack[]>(() => {
+    const tracks = config.public.previewAudioTracks
+    if (Array.isArray(tracks)) {
+      return tracks as PreviewAudioTrack[]
+    }
+    return []
+  })
+
   return {
     siteName,
     siteUrl,
@@ -30,5 +45,6 @@ export const useOfficialSiteConfig = () => {
     icpBeian,
     icpBeianLink,
     previewAudioUrl,
+    previewAudioTracks,
   }
 }

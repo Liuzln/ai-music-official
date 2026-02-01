@@ -127,73 +127,60 @@
     </section>
 
     <!-- Section 3: Awards & Partners -->
-    <section class="awards-section relative min-h-screen w-full py-24 px-4" :data-color="sectionColors.awards">
+    <section
+      class="awards-section relative min-h-screen w-full py-24 px-4"
+      :data-color="sectionColors.awards"
+      :style="{ background: isDark ? 'linear-gradient(180deg, #0a0a0f 0%, #111118 100%)' : 'linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%)' }"
+    >
       <div class="pointer-events-none absolute inset-0 opacity-50">
         <div class="absolute inset-0 [background:radial-gradient(circle_at_15%_20%,rgba(99,102,241,0.18),transparent_55%),radial-gradient(circle_at_85%_75%,rgba(16,185,129,0.14),transparent_55%)]"></div>
         <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-slate-900/10 to-transparent dark:via-white/10"></div>
       </div>
 
       <div class="relative mx-auto w-full max-w-6xl">
-        <header class="awards-header mx-auto mb-14 max-w-3xl text-center">
-          <div class="mb-6 inline-flex items-center gap-2 rounded-full border border-slate-900/10 bg-white/70 px-4 py-2 text-xs font-semibold tracking-wider text-slate-700 shadow-sm shadow-black/5 backdrop-blur dark:border-white/10 dark:bg-white/5 dark:text-slate-200">
-            <Trophy class="h-4 w-4 text-yellow-500" />
-            <span>{{ t('about.awards.title') }}</span>
-          </div>
-          <h2 class="text-4xl md:text-6xl font-black text-slate-900 dark:text-white tracking-tight mb-4">
+        <header class="awards-header mb-12 md:mb-16">
+          <h2 class="text-4xl md:text-6xl font-black text-slate-900 dark:text-white tracking-tight mb-2">
             {{ t('about.awards.title') }}
           </h2>
-          <p class="text-sm md:text-base text-slate-600 dark:text-slate-300/80 leading-relaxed">
-            {{ t('about.awards.description') }}
+          <p class="text-lg md:text-xl text-blue-600 dark:text-blue-400 italic tracking-wider">
+            {{ t('about.awards.subtitle') }}
           </p>
         </header>
 
-        <div class="mb-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="awards-grid mb-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
           <article
             v-for="(a, idx) in awards"
             :key="a.id"
-            class="award-card group relative overflow-hidden rounded-3xl border border-slate-900/10 bg-white/75 shadow-sm shadow-black/5 transition-colors hover:bg-white dark:border-white/10 dark:bg-white/5 dark:hover:bg-white/10"
+            class="award-card group relative cursor-pointer overflow-hidden rounded-xl border border-slate-300 dark:border-slate-500/40 bg-white/80 dark:bg-slate-900/60 backdrop-blur-sm transition-all duration-300 ease-out hover:border-blue-400 dark:hover:border-blue-400/70 hover:bg-white dark:hover:bg-slate-800/80 hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(59,130,246,0.25)] dark:hover:shadow-[0_20px_40px_-15px_rgba(59,130,246,0.4)]"
+            @click="a.image ? openLightbox(idx) : undefined"
           >
-            <div class="relative aspect-[4/3] overflow-hidden bg-slate-100/80 dark:bg-slate-900/50">
-              <div class="absolute left-4 top-4 z-10 flex items-center gap-2">
-                <span
-                  v-if="awardYear(a)"
-                  class="rounded-full border border-slate-900/10 bg-white/80 px-2.5 py-1 text-[11px] font-semibold text-slate-700 backdrop-blur dark:border-white/10 dark:bg-slate-900/40 dark:text-slate-200"
-                >
-                  {{ awardYear(a) }}
-                </span>
-                <span
-                  class="rounded-full border border-slate-900/10 bg-white/80 px-2.5 py-1 text-[11px] font-mono text-slate-700 backdrop-blur dark:border-white/10 dark:bg-slate-900/40 dark:text-slate-200"
-                >
-                  #{{ idx + 1 }}
-                </span>
-              </div>
-
+            <!-- Image area (only show if has image) -->
+            <div v-if="a.image" class="relative aspect-[3/2] overflow-hidden">
               <img
-                v-if="a.image"
                 :src="a.image"
                 :alt="a.title"
-                class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                class="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-108"
                 loading="lazy"
               />
-              <div v-else class="flex h-full w-full flex-col items-center justify-center gap-3">
-                <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-yellow-500/15 text-yellow-500">
-                  <Trophy class="h-7 w-7" />
-                </div>
-                <span class="text-xs text-slate-600 dark:text-slate-400 font-mono border border-slate-900/10 dark:border-slate-700 px-2 py-1 rounded">
-                  {{ t('about.awards.noImage') }}
-                </span>
-              </div>
-
-              <div class="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100 [background:radial-gradient(circle_at_30%_20%,rgba(250,204,21,0.18),transparent_55%),radial-gradient(circle_at_70%_80%,rgba(99,102,241,0.15),transparent_60%)]"></div>
+              <!-- Hover overlay glow -->
+              <div class="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100 bg-gradient-to-t from-blue-500/10 dark:from-blue-500/20 via-transparent to-transparent"></div>
             </div>
 
-            <div class="p-7">
-              <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2 leading-snug">
-                {{ a.title }}
-              </h3>
-              <p class="text-sm text-slate-600 dark:text-slate-300/80">
-                {{ a.subtitle }}
-              </p>
+            <!-- Card content -->
+            <div class="p-5">
+              <div class="flex items-start gap-4">
+                <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-yellow-500/20 to-amber-600/10 dark:from-yellow-500/25 dark:to-amber-600/15 text-yellow-600 dark:text-yellow-400 ring-1 ring-yellow-500/30">
+                  <Trophy class="h-6 w-6" />
+                </div>
+                <div class="flex-1 min-w-0">
+                  <h4 class="text-base font-bold text-slate-900 dark:text-white leading-tight mb-1 line-clamp-2">
+                    {{ a.title }}
+                  </h4>
+                  <p class="text-sm text-slate-500 dark:text-slate-400 font-medium">
+                    {{ a.subtitle }}
+                  </p>
+                </div>
+              </div>
             </div>
           </article>
         </div>
@@ -302,6 +289,54 @@
         </div>
       </div>
     </section>
+
+    <!-- Image Lightbox -->
+    <Teleport to="body">
+      <Transition name="lightbox">
+        <div
+          v-if="lightboxOpen"
+          class="lightbox-overlay fixed inset-0 z-[100] flex items-center justify-center bg-white/95 dark:bg-black/90 backdrop-blur-sm"
+          @click.self="closeLightbox"
+          @keydown.esc="closeLightbox"
+        >
+          <button
+            class="absolute right-4 top-4 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-slate-900/10 text-slate-700 dark:bg-white/10 dark:text-white/80 transition-colors hover:bg-slate-900/20 dark:hover:bg-white/20 hover:text-slate-900 dark:hover:text-white"
+            :aria-label="t('about.awards.lightbox.close')"
+            @click="closeLightbox"
+          >
+            <X class="h-5 w-5" />
+          </button>
+
+          <div class="lightbox-content relative max-h-[90vh] max-w-[90vw]">
+            <img
+              v-if="currentLightboxImage"
+              :src="currentLightboxImage"
+              :alt="currentLightboxAlt"
+              class="max-h-[90vh] max-w-[90vw] rounded-lg object-contain shadow-2xl"
+            />
+            <div v-else class="flex h-64 w-96 items-center justify-center rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-white/60">
+              <span>{{ t('about.awards.noImage') }}</span>
+            </div>
+          </div>
+
+          <!-- Navigation arrows for multiple images -->
+          <button
+            v-if="awards && awards.length > 1"
+            class="absolute left-4 top-1/2 z-10 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-slate-900/10 text-slate-700 dark:bg-white/10 dark:text-white/80 transition-colors hover:bg-slate-900/20 dark:hover:bg-white/20 hover:text-slate-900 dark:hover:text-white"
+            @click="prevLightboxImage"
+          >
+            <ChevronLeft class="h-6 w-6" />
+          </button>
+          <button
+            v-if="awards && awards.length > 1"
+            class="absolute right-4 top-1/2 z-10 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-slate-900/10 text-slate-700 dark:bg-white/10 dark:text-white/80 transition-colors hover:bg-slate-900/20 dark:hover:bg-white/20 hover:text-slate-900 dark:hover:text-white"
+            @click="nextLightboxImage"
+          >
+            <ChevronRight class="h-6 w-6" />
+          </button>
+        </div>
+      </Transition>
+    </Teleport>
   </div>
 </template>
 
@@ -309,8 +344,8 @@
 import { computed, ref, onMounted, onBeforeUnmount, nextTick, watch } from 'vue'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { 
-    Mail, Trophy, Building2, Handshake, Copy, QrCode 
+import {
+    Mail, Trophy, Building2, Handshake, Copy, QrCode, X, ChevronLeft, ChevronRight
 } from 'lucide-vue-next'
 
 gsap.registerPlugin(ScrollTrigger)
@@ -382,6 +417,41 @@ const wrapper = ref<HTMLElement | null>(null)
 const cardsContainer = ref<HTMLElement | null>(null)
 const activeSectionIndex = ref(0)
 let ctx: gsap.Context
+
+// Lightbox state
+const lightboxOpen = ref(false)
+const lightboxIndex = ref(0)
+
+const currentLightboxImage = computed(() => {
+  if (!props.awards || props.awards.length === 0) return ''
+  return props.awards[lightboxIndex.value]?.image || ''
+})
+
+const currentLightboxAlt = computed(() => {
+  if (!props.awards || props.awards.length === 0) return ''
+  return props.awards[lightboxIndex.value]?.title || ''
+})
+
+const openLightbox = (index: number) => {
+  lightboxIndex.value = index
+  lightboxOpen.value = true
+  document.body.style.overflow = 'hidden'
+}
+
+const closeLightbox = () => {
+  lightboxOpen.value = false
+  document.body.style.overflow = ''
+}
+
+const prevLightboxImage = () => {
+  if (!props.awards) return
+  lightboxIndex.value = (lightboxIndex.value - 1 + props.awards.length) % props.awards.length
+}
+
+const nextLightboxImage = () => {
+  if (!props.awards) return
+  lightboxIndex.value = (lightboxIndex.value + 1) % props.awards.length
+}
 
 const navItems = [
   { id: 'hero', selector: '.hero-section', labelKey: 'about.nav.intro' },
@@ -596,9 +666,9 @@ onMounted(async () => {
       ".awards-header",
       {
         opacity: 0,
-        y: 22,
-        duration: 0.9,
-        ease: "power2.out",
+        y: 30,
+        duration: 1,
+        ease: "back.out(1.2)",
         scrollTrigger: {
           trigger: ".awards-section",
           start: "top 70%",
@@ -607,18 +677,28 @@ onMounted(async () => {
       },
     )
 
-    gsap.from(
+    // Animated award cards with stagger and spring effect
+    gsap.fromTo(
       ".award-card",
       {
         opacity: 0,
-        y: 28,
-        duration: 0.9,
+        y: 40,
+        scale: 0.95,
+      },
+      {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        duration: 0.6,
         ease: "power2.out",
-        stagger: 0.08,
+        stagger: {
+          amount: 0.4,
+          from: "start",
+        },
         scrollTrigger: {
-          trigger: ".awards-section",
-          start: "top 65%",
-          toggleActions: "play none none reverse",
+          trigger: ".awards-grid",
+          start: "top 80%",
+          toggleActions: "play none none none",
         },
       },
     )
@@ -764,5 +844,37 @@ onBeforeUnmount(() => {
 }
 .cards-container::-webkit-scrollbar {
   display: none;
+}
+
+/* Award card hover scale */
+.award-card:hover img {
+  transform: scale(1.08);
+}
+
+/* Lightbox transitions */
+.lightbox-enter-active {
+  transition: opacity 0.3s ease-out;
+}
+.lightbox-enter-active .lightbox-content {
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease-out;
+}
+.lightbox-leave-active {
+  transition: opacity 0.25s ease-in;
+}
+.lightbox-leave-active .lightbox-content {
+  transition: transform 0.25s ease-in, opacity 0.25s ease-in;
+}
+
+.lightbox-enter-from,
+.lightbox-leave-to {
+  opacity: 0;
+}
+.lightbox-enter-from .lightbox-content {
+  transform: scale(0.9);
+  opacity: 0;
+}
+.lightbox-leave-to .lightbox-content {
+  transform: scale(0.95);
+  opacity: 0;
 }
 </style>
